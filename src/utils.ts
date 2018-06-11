@@ -16,3 +16,28 @@ export const remove = <T>(x: T, xs: T[]): T[] => {
 
 export const uniqueCons = <T>(x: T, xs: T[]): T[] =>
   contains(x, xs) ? xs : cons(x, xs);
+
+export const identity = <T>(x: T): T => x;
+
+export const find = <T>(f: ((element: T) => boolean), xs: T[]): T | null => {
+  if (xs.length === 0) return null;
+
+  const [head, ...tail] = xs;
+
+  return f(head) ? head : find(f, tail);
+};
+
+export const findValue = <T, U>(f: ((element: T) => U), xs: T[]): U | null => {
+  if (xs.length === 0) return null;
+
+  const [head, ...tail] = xs;
+
+  const value = f(head);
+
+  return value ? value : findValue(f, tail);
+};
+
+export const exists = (x: any): boolean =>
+  !(x === undefined || x === null || x === false);
+
+export const compact = <T>(xs: (T | null)[]): T[] => xs.filter(exists) as T[];

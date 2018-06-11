@@ -1,7 +1,7 @@
 # Change Log
-All notable changes to the "vscode-open-buffers" extension will be documented in this file.
+All notable changes to the "vscode-switch-to-spec" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 ## [Unreleased]
-- Added a basic open buffers search
+- Added a basic spec switcher

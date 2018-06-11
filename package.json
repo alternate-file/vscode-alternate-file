@@ -1,10 +1,10 @@
 {
-  "name": "vscode-open-buffers",
+  "name": "vscode-switch-to-spec",
   "displayName": "VS Code Open Buffers",
   "description": "Quickly search your open buffers in VS Code",
   "version": "0.0.1",
   "publisher": "will-wow",
-  "repository": "github:will-wow/vscode-open-buffers",
+  "repository": "github:will-wow/vscode-switch-to-spec",
   "engines": {
     "vscode": "^1.23.0"
   },
@@ -21,8 +21,12 @@
   "contributes": {
     "commands": [
       {
-        "command": "open-buffers.openBuffer",
-        "title": "Open Buffer"
+        "command": "switch-to-spec.alternateFile",
+        "title": "Alternate File"
+      },
+      {
+        "command": "switch-to-spec.alternateFileInSplit",
+        "title": "Split Alternate File"
       }
     ]
   },
