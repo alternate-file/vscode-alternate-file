@@ -6,11 +6,7 @@ export type t = string;
 export const open = (doSplit: boolean) => (filePath: t | null): void => {
   if (!filePath) return;
 
-  if (doSplit) {
-    openFileInSplit(filePath);
-  } else {
-    openFileInPane(filePath);
-  }
+  splitThenExecute(doSplit, openFileInPane, filePath);
 };
 
 export const create = (doSplit: boolean, filePath: t): void => {
@@ -30,10 +26,19 @@ const findFirstUriPath = (uris: (vscode.Uri)[]): t | null => {
 
 const openFileInPane = (filePath: t): void => {
   const fileUri = vscode.Uri.file(filePath);
-  vscode.window.showTextDocument(fileUri);
+  vscode.window.showTextDocument(fileUri, { viewColumn: -1 });
 };
 
-const openFileInSplit = (filePath: t): void => {
-  vscode.commands.executeCommand("workbench.action.splitEditor");
-  openFileInPane(filePath);
+const splitThenExecute = (
+  doSplit: boolean,
+  f: (filePath: t) => void,
+  filePath: t
+): void => {
+  if (doSplit) {
+    vscode.commands
+      .executeCommand("workbench.action.splitEditor")
+      .then(() => f(filePath));
+  } else {
+    f(filePath);
+  }
 };
