@@ -1,0 +1,51 @@
+{
+  "name": "vscode-open-buffers",
+  "displayName": "VS Code Open Buffers",
+  "description": "Quickly search your open buffers in VS Code",
+  "version": "0.0.1",
+  "publisher": "will-wow",
+  "repository": "github:will-wow/vscode-open-buffers",
+  "engines": {
+    "vscode": "^1.23.0"
+  },
+  "keywords": [
+    "vscode"
+  ],
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./out/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "open-buffers.openBuffer",
+        "title": "Open Buffer"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "npm run compile && node ./node_modules/vscode/bin/test",
+    "format": "npm run format-tslint && npm run format-prettier",
+    "format-tslint": "tslint -p . --config tslint.json",
+    "format-prettier": "prettier --write \"**/*.{ts,json}\""
+  },
+  "devDependencies": {
+    "@types/mocha": "^2.2.42",
+    "@types/node": "^7.0.65",
+    "chai": "^4.1.2",
+    "prettier": "^1.13.0",
+    "tslint": "^5.8.0",
+    "tslint-config-airbnb": "^5.9.2",
+    "tslint-config-prettier": "^1.13.0",
+    "typescript": "^2.6.1",
+    "vscode": "^1.1.6"
+  },
+  "dependencies": {}
+}
