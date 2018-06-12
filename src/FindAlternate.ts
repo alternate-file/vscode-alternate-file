@@ -8,26 +8,33 @@ export const openFile = (
   patterns: AlternatePattern.t[],
   { split }: { split: boolean }
 ) => (): void => {
-  const activeEditor = vscode.window.activeTextEditor;
-
-  if (!activeEditor) return;
-
-  const path = relativePath(activeEditor);
-
+  const path = currentPath();
   if (!path) return;
 
-  findAlternatePath(patterns, path).then(path => {
-    if (path) {
-      FilePath.open(split)(path);
-    }
-  });
+  findAlternatePath(patterns, path).then(
+    path => {
+      if (path) {
+        FilePath.open(split)(path);
+      }
+    },
+    () => console.log("alternate file not found")
+  );
 };
 
 export const createFile = (
   patterns: AlternatePattern.t[],
   { split }: { split: boolean }
 ) => (): void => {
-  // TODO
+  const path = currentPath();
+  if (!path) return;
+};
+
+const currentPath = (): string | null => {
+  const activeEditor = vscode.window.activeTextEditor;
+
+  if (!activeEditor) return null;
+
+  return relativePath(activeEditor);
 };
 
 const relativePath = (activeEditor: vscode.TextEditor) => {

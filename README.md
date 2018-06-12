@@ -1,4 +1,4 @@
-# vscode-switch-to-spec README
+# vscode-alternate README
 
 It's nice that VS Code has a list of open files in the file explorer, but I'd like to fuzzy search that like I can Cmd/Ctrl-P. This lets you do that.
 
