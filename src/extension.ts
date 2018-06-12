@@ -19,6 +19,14 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand(
           "alternate.alternateFileInSplit",
           FindAlternate.openFile(patterns, { split: true })
+        ),
+        vscode.commands.registerCommand(
+          "alternate.createAlternateFile",
+          FindAlternate.createFile(patterns, { split: false })
+        ),
+        vscode.commands.registerCommand(
+          "alternate.createAlternateFileInSplit",
+          FindAlternate.createFile(patterns, { split: true })
         )
       ];
 

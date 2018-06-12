@@ -16,18 +16,7 @@ const projectionsFilename = ".projections.json";
 
 export const findProjections = (): Thenable<t> =>
   FilePath.findFileUri(projectionsFilename)
-    .then(
-      (uri: vscode.Uri) =>
-        new Promise<string>((resolve, reject) => {
-          fs.readFile(uri.fsPath, (err: any, data: string) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(data);
-            }
-          });
-        })
-    )
+    .then(readFileByUri)
     .then(parseProjections);
 
 export const projectionsToAlternatePatterns = (
@@ -36,6 +25,17 @@ export const projectionsToAlternatePatterns = (
   const pairs = utils.toPairs(projections) as [string, SourceData][];
   return pairs.map(projectionPairToAlternatePattern);
 };
+
+const readFileByUri = (uri: vscode.Uri): Thenable<string> =>
+  new Promise<string>((resolve, reject) => {
+    fs.readFile(uri.fsPath, (err: any, data: string) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
 
 const parseProjections: (file: string) => t = JSON.parse;
 

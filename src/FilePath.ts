@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
 import { exists } from "./utils";
-import { resolve } from "url";
 
 export type t = string;
 
@@ -14,19 +13,13 @@ export const create = (doSplit: boolean, filePath: t): void => {
   // TODO
 };
 
-export const findExisting = (filePaths: t[]): Thenable<t> =>
-  Promise.all(filePaths.map(findFileUri)).then(
-    (uris: vscode.Uri[]) =>
-      new Promise<string>((resolve, reject) => {
-        const path = findFirstUriPath(uris);
+export const findExisting = async (filePaths: t[]): Promise<t> => {
+  const uris: vscode.Uri[] = await Promise.all(filePaths.map(findFileUri));
+  const path = findFirstUriPath(uris);
+  if (!path) throw new Error("path not found");
 
-        if (path) {
-          resolve(path);
-        } else {
-          reject(null);
-        }
-      })
-  );
+  return path;
+};
 
 export const findFileUri = (filePath: t): Thenable<vscode.Uri> =>
   vscode.workspace.findFiles(filePath).then((files: vscode.Uri[]) => files[0]);
