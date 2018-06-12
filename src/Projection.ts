@@ -39,7 +39,7 @@ export const projectionsToAlternatePatterns = (
 
 const parseProjections: (file: string) => t = JSON.parse;
 
-const projectionPairToAlternatePattern = ([src, { alternate }]: [
+const projectionPairToAlternatePattern = ([main, { alternate }]: [
   string,
   SourceData
-]): AlternatePattern.t => ({ src, spec: alternate });
+]): AlternatePattern.t => ({ main, alternate: alternate.replace("{}", "*") });

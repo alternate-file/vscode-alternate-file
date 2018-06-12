@@ -9,9 +9,9 @@ import * as AlternatePattern from "../AlternatePattern";
 // import * as myExtension from '../extension';
 
 suite("AlternatePattern", () => {
-  const patterns = [
-    { src: "src/*.ts", spec: "src/test/*.test.ts" },
-    { src: "app/*.rb", spec: "test/*_spec.rb" }
+  const patterns: AlternatePattern.t[] = [
+    { main: "src/*.ts", alternate: "src/test/*.test.ts" },
+    { main: "app/*.rb", alternate: "test/*_spec.rb" }
   ];
 
   test("alternatePath finds ts specs", () => {

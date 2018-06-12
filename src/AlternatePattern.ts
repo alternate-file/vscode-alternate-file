@@ -1,15 +1,15 @@
 export interface t {
-  src: string;
-  spec: string;
+  main: string;
+  alternate: string;
 }
 import * as FilePath from "./FilePath";
 
 export const alternatePath = (path: string) => ({
-  src,
-  spec
+  main,
+  alternate
 }: t): FilePath.t | null =>
-  alternatePathForSide(spec, src, path) ||
-  alternatePathForSide(src, spec, path);
+  alternatePathForSide(alternate, main, path) ||
+  alternatePathForSide(main, alternate, path);
 
 const alternatePathForSide = (
   pathPattern: string,
