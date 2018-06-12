@@ -5,6 +5,12 @@ export const contains = <T>(x: T, xs: T[]): boolean => xs.indexOf(x) !== -1;
 export const map = <T, U>(f: ((element: T) => U)) => (xs: T[]): U[] =>
   xs.map(f);
 
+export const toPairs = <T, U extends keyof T>(obj: T): [U, T[U]][] => {
+  const keys: U[] = Object.keys(obj) as U[];
+
+  return map((key: U): [U, T[U]] => [key, obj[key]])(keys);
+};
+
 export const prop = <T, K extends keyof T>(key: K) => (object: T): T[K] =>
   object[key];
 
@@ -41,3 +47,6 @@ export const exists = (x: any): boolean =>
   !(x === undefined || x === null || x === false);
 
 export const compact = <T>(xs: (T | null)[]): T[] => xs.filter(exists) as T[];
+
+export const has = <T, P extends keyof T>(prop: P, obj: T): T[P] =>
+  Object.prototype.hasOwnProperty.call(obj, prop);

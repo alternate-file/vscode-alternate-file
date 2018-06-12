@@ -14,9 +14,9 @@ export const create = (doSplit: boolean, filePath: t): void => {
 };
 
 export const findExisting = (filePaths: t[]): Thenable<t | null> =>
-  Promise.all(filePaths.map(findMatchingFile)).then(findFirstUriPath);
+  Promise.all(filePaths.map(findFileUri)).then(findFirstUriPath);
 
-const findMatchingFile = (filePath: t): Thenable<vscode.Uri> =>
+export const findFileUri = (filePath: t): Thenable<vscode.Uri> =>
   vscode.workspace.findFiles(filePath).then((files: vscode.Uri[]) => files[0]);
 
 const findFirstUriPath = (uris: (vscode.Uri)[]): t | null => {

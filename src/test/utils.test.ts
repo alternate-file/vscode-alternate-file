@@ -14,4 +14,11 @@ suite("utils", () => {
     assert.equal(utils.find(greaterThan1, [1, 2, 3]), 2);
     assert.equal(utils.find(greaterThan1, [-1, -2]), null);
   });
+
+  test("to pairs", () => {
+    assert.deepEqual(utils.toPairs({ a: "a", b: "b" }), [
+      ["a", "a"],
+      ["b", "b"]
+    ]);
+  });
 });
