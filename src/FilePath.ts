@@ -4,16 +4,16 @@ import { exists } from "./utils";
 
 export type t = string;
 
-export const open = (doSplit: boolean) => (filePath: t | null): void => {
+export const open = (viewColumn: number, filePath: t | null): void => {
   if (!filePath) return;
 
-  splitThenExecute(doSplit, openFileInPane, filePath);
+  openFileInPane(viewColumn, filePath);
 };
 
-export const create = (doSplit: boolean) => (filePath: t): void => {
+export const create = (viewColumn: number, filePath: t): void => {
   if (!filePath) return;
 
-  splitThenExecute(doSplit, createFileInPane, filePath);
+  createFileInPane(viewColumn, filePath);
 };
 
 export const findExisting = async (filePaths: t[]): Promise<t> => {
@@ -32,28 +32,17 @@ const findFirstUriPath = (uris: (vscode.Uri)[]): t | null => {
   return existingFile ? existingFile.path : null;
 };
 
-const openFileInPane = (filePath: t): void => {
+const openFileInPane = (viewColumn: number, filePath: t): void => {
   const fileUri = vscode.Uri.file(filePath);
-  vscode.window.showTextDocument(fileUri, { viewColumn: -1 });
+  vscode.window.showTextDocument(fileUri, { viewColumn });
 };
 
-const createFileInPane = async (filePath: t): Promise<vscode.TextEditor> => {
+const createFileInPane = async (
+  viewColumn: number,
+  filePath: t
+): Promise<vscode.TextEditor> => {
   const newFileUri = vscode.Uri.parse(`untitled:${filePath}`);
   const doc = await vscode.workspace.openTextDocument(newFileUri);
 
-  return vscode.window.showTextDocument(doc, { viewColumn: -1 });
-};
-
-const splitThenExecute = (
-  doSplit: boolean,
-  f: (filePath: t) => void,
-  filePath: t
-): void => {
-  if (doSplit) {
-    vscode.commands
-      .executeCommand("workbench.action.splitEditor")
-      .then(() => f(filePath));
-  } else {
-    f(filePath);
-  }
+  return vscode.window.showTextDocument(doc, { viewColumn });
 };

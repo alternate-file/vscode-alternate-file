@@ -9,11 +9,14 @@ export const openFile = (
   patterns: AlternatePattern.t[],
   { split }: { split: boolean }
 ) => (): void => {
-  const currentPath = getCurrentPath();
+  const activeEditor = getActiveEditor();
+  if (!activeEditor) return;
+  const currentPath = getCurrentPath(activeEditor);
   if (!currentPath) return;
+  const viewColumn = nextViewColumn(split, activeEditor);
 
   findAlternatePath(patterns, currentPath).then(
-    newPath => FilePath.open(split)(newPath),
+    newPath => FilePath.open(viewColumn, newPath),
     () => console.log("alternate file not found")
   );
 };
@@ -22,17 +25,20 @@ export const createFile = (
   patterns: AlternatePattern.t[],
   { split }: { split: boolean }
 ) => (): void => {
-  const currentPath = getCurrentPath();
+  const activeEditor = getActiveEditor();
+  if (!activeEditor) return;
+  const currentPath = getCurrentPath(activeEditor);
   if (!currentPath) return;
+  const viewColumn = nextViewColumn(split, activeEditor);
 
   findAlternatePath(patterns, currentPath).then(
-    newPath => FilePath.open(split)(newPath),
+    newPath => FilePath.open(viewColumn, newPath),
     (): void => {
       const newPath = makeAlternatePath(patterns, currentPath);
-      const workspacePath = currentWorkspacePath();
+      const workspacePath = currentWorkspacePath(activeEditor);
 
       if (newPath && workspacePath) {
-        FilePath.create(split)(path.join(workspacePath, newPath));
+        FilePath.create(viewColumn, path.join(workspacePath, newPath));
       } else {
         console.log("pattern not found!");
       }
@@ -40,19 +46,15 @@ export const createFile = (
   );
 };
 
-const getCurrentPath = (): string | null => {
-  const activeEditor = vscode.window.activeTextEditor;
+const getActiveEditor = (): vscode.TextEditor | null =>
+  vscode.window.activeTextEditor || null;
 
-  if (!activeEditor) return null;
+const getCurrentPath = (activeEditor: vscode.TextEditor): string | null =>
+  relativePath(activeEditor);
 
-  return relativePath(activeEditor);
-};
-
-const currentWorkspacePath = (): string | null => {
-  const activeEditor = vscode.window.activeTextEditor;
-
-  if (!activeEditor) return null;
-
+const currentWorkspacePath = (
+  activeEditor: vscode.TextEditor
+): string | null => {
   const workspace = vscode.workspace.getWorkspaceFolder(
     activeEditor.document.uri
   );
@@ -60,6 +62,15 @@ const currentWorkspacePath = (): string | null => {
   if (!isWorkspaceValid(workspace)) return null;
 
   return workspace.uri.fsPath;
+};
+
+const nextViewColumn = (
+  split: boolean,
+  activeEditor: vscode.TextEditor
+): number => {
+  if (!activeEditor.viewColumn) return 0;
+  if (!split) return -1;
+  return activeEditor.viewColumn + 1;
 };
 
 const relativePath = (activeEditor: vscode.TextEditor) => {
