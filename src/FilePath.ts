@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+
 import { exists } from "./utils";
 
 export type t = string;
@@ -9,8 +10,10 @@ export const open = (doSplit: boolean) => (filePath: t | null): void => {
   splitThenExecute(doSplit, openFileInPane, filePath);
 };
 
-export const create = (doSplit: boolean, filePath: t): void => {
-  // TODO
+export const create = (doSplit: boolean) => (filePath: t): void => {
+  if (!filePath) return;
+
+  splitThenExecute(doSplit, createFileInPane, filePath);
 };
 
 export const findExisting = async (filePaths: t[]): Promise<t> => {
@@ -32,6 +35,13 @@ const findFirstUriPath = (uris: (vscode.Uri)[]): t | null => {
 const openFileInPane = (filePath: t): void => {
   const fileUri = vscode.Uri.file(filePath);
   vscode.window.showTextDocument(fileUri, { viewColumn: -1 });
+};
+
+const createFileInPane = async (filePath: t): Promise<vscode.TextEditor> => {
+  const newFileUri = vscode.Uri.parse(`untitled:${filePath}`);
+  const doc = await vscode.workspace.openTextDocument(newFileUri);
+
+  return vscode.window.showTextDocument(doc, { viewColumn: -1 });
 };
 
 const splitThenExecute = (

@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import * as path from "path";
 
 import { compact, findValue } from "./utils";
 import * as AlternatePattern from "./AlternatePattern";
@@ -8,11 +9,11 @@ export const openFile = (
   patterns: AlternatePattern.t[],
   { split }: { split: boolean }
 ) => (): void => {
-  const path = currentPath();
-  if (!path) return;
+  const currentPath = getCurrentPath();
+  if (!currentPath) return;
 
-  findAlternatePath(patterns, path).then(
-    path => FilePath.open(split)(path),
+  findAlternatePath(patterns, currentPath).then(
+    newPath => FilePath.open(split)(newPath),
     () => console.log("alternate file not found")
   );
 };
@@ -21,16 +22,17 @@ export const createFile = (
   patterns: AlternatePattern.t[],
   { split }: { split: boolean }
 ) => (): void => {
-  const path = currentPath();
-  if (!path) return;
+  const currentPath = getCurrentPath();
+  if (!currentPath) return;
 
-  findAlternatePath(patterns, path).then(
-    path => FilePath.open(split)(path),
+  findAlternatePath(patterns, currentPath).then(
+    newPath => FilePath.open(split)(newPath),
     (): void => {
-      const newPath = makeAlternatePath(patterns, path);
+      const newPath = makeAlternatePath(patterns, currentPath);
+      const workspacePath = currentWorkspacePath();
 
-      if (newPath) {
-        FilePath.open(split)(path)
+      if (newPath && workspacePath) {
+        FilePath.create(split)(path.join(workspacePath, newPath));
       } else {
         console.log("pattern not found!");
       }
@@ -38,12 +40,26 @@ export const createFile = (
   );
 };
 
-const currentPath = (): string | null => {
+const getCurrentPath = (): string | null => {
   const activeEditor = vscode.window.activeTextEditor;
 
   if (!activeEditor) return null;
 
   return relativePath(activeEditor);
+};
+
+const currentWorkspacePath = (): string | null => {
+  const activeEditor = vscode.window.activeTextEditor;
+
+  if (!activeEditor) return null;
+
+  const workspace = vscode.workspace.getWorkspaceFolder(
+    activeEditor.document.uri
+  );
+
+  if (!isWorkspaceValid(workspace)) return null;
+
+  return workspace.uri.fsPath;
 };
 
 const relativePath = (activeEditor: vscode.TextEditor) => {
@@ -63,7 +79,14 @@ const makeAlternatePath = (
   patterns: AlternatePattern.t[],
   path: string
 ): string | null => {
-  const relativePath = findValue(AlternatePattern.alternatePath(path), patterns);
-  if (!relativePath) return null;
-  return ""
-}
+  const relativePath = findValue(
+    AlternatePattern.alternatePath(path),
+    patterns
+  );
+  return relativePath || null;
+};
+
+const isWorkspaceValid = (
+  workspace: vscode.WorkspaceFolder | undefined
+): workspace is vscode.WorkspaceFolder =>
+  workspace !== undefined && workspace.uri.scheme === "file";
