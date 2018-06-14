@@ -15,7 +15,7 @@
     "Other"
   ],
   "activationEvents": [
-    "*"
+    "workspaceContains:.projections.json"
   ],
   "main": "./out/extension",
   "contributes": {
