@@ -27,6 +27,14 @@
       {
         "command": "alternate.alternateFileInSplit",
         "title": "Split Alternate File"
+      },
+      {
+        "command": "alternate.createAlternateFile",
+        "title": "Create Alternate File"
+      },
+      {
+        "command": "alternate.createAlternateFileInSplit",
+        "title": "Create Split Alternate File"
       }
     ]
   },
@@ -51,5 +59,8 @@
     "typescript": "^2.6.1",
     "vscode": "^1.1.6"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@types/util.promisify": "^1.0.0",
+    "util.promisify": "^1.0.0"
+  }
 }

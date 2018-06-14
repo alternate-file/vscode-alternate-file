@@ -1,4 +1,5 @@
-const fs = require("fs");
+import * as fs from "fs";
+import * as promiseify from "util.promisify";
 import * as vscode from "vscode";
 import * as utils from "./utils";
 import * as AlternatePattern from "./AlternatePattern";
@@ -26,16 +27,10 @@ export const projectionsToAlternatePatterns = (
   return pairs.map(projectionPairToAlternatePattern);
 };
 
-const readFileByUri = (uri: vscode.Uri): Thenable<string> =>
-  new Promise<string>((resolve, reject) => {
-    fs.readFile(uri.fsPath, (err: any, data: string) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(data);
-      }
-    });
-  });
+const readFileByUri = async (uri: vscode.Uri): Promise<string> => {
+  const data = await readFile(uri.fsPath);
+  return data.toString();
+};
 
 const parseProjections: (file: string) => t = JSON.parse;
 
@@ -43,3 +38,5 @@ const projectionPairToAlternatePattern = ([main, { alternate }]: [
   string,
   SourceData
 ]): AlternatePattern.t => ({ main, alternate: alternate.replace("{}", "*") });
+
+const readFile: (filename: string) => Promise<Buffer> = promiseify(fs.readFile);
