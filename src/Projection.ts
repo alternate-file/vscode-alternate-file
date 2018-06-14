@@ -9,10 +9,13 @@ export interface t {
   [sourcePattern: string]: SourceData;
 }
 
-interface SourceData {
-  alternate: string;
+export interface SourceData {
+  alternate?: string;
+  alternates?: string[];
 }
+
 type ProjectionPair = [string, SourceData];
+type SingleProjectionPair = [string, { alternate: string }];
 
 const projectionsFilename = ".projections.json";
 const starRegex = /\*/;
@@ -26,8 +29,10 @@ export const findProjections = (): Thenable<t> =>
 export const projectionsToAlternatePatterns = (
   projections: t
 ): AlternatePattern.t[] => {
-  const pairs = utils.toPairs(projections) as [string, SourceData][];
-  return pairs.map(projectionPairToAlternatePattern);
+  const pairs = utils.toPairs(projections) as ProjectionPair[];
+  const allPairs = utils.flatten(pairs.map(splitOutAlternates));
+
+  return allPairs.map(projectionPairToAlternatePattern);
 };
 
 const readFileByUri = async (uri: vscode.Uri): Promise<string> => {
@@ -39,10 +44,26 @@ const readFile: (filename: string) => Promise<Buffer> = promiseify(fs.readFile);
 
 const parseProjections: (file: string) => t = JSON.parse;
 
+const splitOutAlternates = (pair: ProjectionPair): SingleProjectionPair[] => {
+  const [main, { alternate, alternates }] = pair;
+
+  if (alternate) {
+    return [[main, { alternate }]] as SingleProjectionPair[];
+  }
+
+  if (alternates) {
+    return alternates.map(
+      foo => [main, { alternate: foo }] as SingleProjectionPair
+    );
+  }
+
+  throw new Error(`${main} is missing alternates`);
+};
+
 const projectionPairToAlternatePattern = ([
   main,
   { alternate }
-]: ProjectionPair): AlternatePattern.t => ({
+]: SingleProjectionPair): AlternatePattern.t => ({
   main: mainPathToAlternate(main),
   alternate: alternatePathToAlternate(alternate)
 });

@@ -23,6 +23,15 @@ suite("AlternatePattern", () => {
     );
   });
 
+  test("alternatePath finds alternate for short path", () => {
+    assert.equal(
+      AlternatePattern.alternatePath("app/foo.rb")(
+        patterns[1]
+      ),
+      "test/foo_spec.rb"
+    );
+  });
+
   test("alternatePath finds ts specs", () => {
     assert.equal(
       AlternatePattern.alternatePath("src/foo/bar.ts")(patterns[0]),

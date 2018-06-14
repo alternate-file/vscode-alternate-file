@@ -50,3 +50,5 @@ export const compact = <T>(xs: (T | null)[]): T[] => xs.filter(exists) as T[];
 
 export const has = <T, P extends keyof T>(prop: P, obj: T): T[P] =>
   Object.prototype.hasOwnProperty.call(obj, prop);
+
+export const flatten = <T>(xss: T[][]): T[] => [].concat.apply([], xss);

@@ -33,4 +33,26 @@ suite("Projection", () => {
       }
     ]);
   });
+
+  test("projectionsToAlternatePatterns parses multiple", () => {
+    const projections: Projection.t = {
+      "src/*.ts": {
+        alternates: [
+          "src/test/{}.test.ts",
+          "src/{dirname}/__test__/{basename}.test.ts"
+        ]
+      }
+    };
+
+    assert.deepEqual(Projection.projectionsToAlternatePatterns(projections), [
+      {
+        main: "src/{dirname}/{basename}.ts",
+        alternate: "src/test/{dirname}/{basename}.test.ts"
+      },
+      {
+        main: "src/{dirname}/{basename}.ts",
+        alternate: "src/{dirname}/__test__/{basename}.test.ts"
+      }
+    ]);
+  });
 });
