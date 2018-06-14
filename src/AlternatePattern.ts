@@ -4,6 +4,9 @@ export interface t {
 }
 import * as FilePath from "./FilePath";
 
+const dirnameRegex = /\{dirname\}/g;
+const basenameRegex = /\{basename\}/g;
+
 export const alternatePath = (path: string) => ({
   main,
   alternate
@@ -21,12 +24,17 @@ const alternatePathForSide = (
 
   if (!matches || !matches[1]) return null;
 
-  const core = matches[1];
+  const dirname = matches[1];
+  const basename = matches[2];
 
-  return alternatePattern.replace("*", core);
+  return alternatePattern
+    .replace("{dirname}", dirname)
+    .replace("{basename}", basename);
 };
 
 const patternToRegex = (pathPattern: string): RegExp => {
-  const regexPattern = pathPattern.replace("*", "(.+)");
+  const regexPattern = pathPattern
+    .replace(dirnameRegex, "(.+)")
+    .replace(basenameRegex, "([^/]+)");
   return new RegExp(regexPattern);
 };

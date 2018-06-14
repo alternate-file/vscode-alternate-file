@@ -1,0 +1,6 @@
+{
+  "src/*.js": { "alternate": "src/test/{}.test.js" },
+  "src/*.jsx": { "alternate": "src/test/{}.test.jsx" },
+  "src/**/*.ts": { "alternate": "src/{dirname}/__test__/{basename}.test.ts" },
+  "app/*.rb": { "alternate": "test/{}_spec.rb" }
+}

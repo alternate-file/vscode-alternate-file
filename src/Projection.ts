@@ -12,8 +12,11 @@ export interface t {
 interface SourceData {
   alternate: string;
 }
+type ProjectionPair = [string, SourceData];
 
 const projectionsFilename = ".projections.json";
+const starRegex = /\*/;
+const basenameRegex = /\{\}|\{basename\}/;
 
 export const findProjections = (): Thenable<t> =>
   FilePath.findFileUri(projectionsFilename)
@@ -32,11 +35,32 @@ const readFileByUri = async (uri: vscode.Uri): Promise<string> => {
   return data.toString();
 };
 
+const readFile: (filename: string) => Promise<Buffer> = promiseify(fs.readFile);
+
 const parseProjections: (file: string) => t = JSON.parse;
 
-const projectionPairToAlternatePattern = ([main, { alternate }]: [
-  string,
-  SourceData
-]): AlternatePattern.t => ({ main, alternate: alternate.replace("{}", "*") });
+const projectionPairToAlternatePattern = ([
+  main,
+  { alternate }
+]: ProjectionPair): AlternatePattern.t => ({
+  main: mainPathToAlternate(main),
+  alternate: alternatePathToAlternate(alternate)
+});
 
-const readFile: (filename: string) => Promise<Buffer> = promiseify(fs.readFile);
+const mainPathToAlternate = (path: string): string => {
+  if (!starRegex.test(path)) {
+    throw new Error(`${path} is an invalid main projection path`);
+  }
+
+  const taggedPath = /\*\*/.test(path) ? path : path.replace("*", "**/*");
+
+  return taggedPath.replace("**", "{dirname}").replace("*", "{basename}");
+};
+
+const alternatePathToAlternate = (path: string): string => {
+  if (!basenameRegex.test(path)) {
+    throw new Error(`${path} is an invalid alternate projection path`);
+  }
+
+  return path.replace(/\{\}/g, "{dirname}/{basename}");
+};

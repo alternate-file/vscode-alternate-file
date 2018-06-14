@@ -3,15 +3,34 @@ import * as assert from "assert";
 import * as Projection from "../Projection";
 
 suite("Projection", () => {
-  const projections: Projection.t = {
-    "src/*.ts": { alternate: "src/test/{}.test.ts" },
-    "app/*.rb": { alternate: "test/{}_spec.rb" }
-  };
+  test("projectionsToAlternatePatterns parses *", () => {
+    const projections: Projection.t = {
+      "src/*.ts": { alternate: "src/test/{}.test.ts" },
+      "app/*.rb": { alternate: "test/{}_spec.rb" }
+    };
 
-  test("alternatePath finds ts specs", () => {
     assert.deepEqual(Projection.projectionsToAlternatePatterns(projections), [
-      { main: "src/*.ts", alternate: "src/test/*.test.ts" },
-      { main: "app/*.rb", alternate: "test/*_spec.rb" }
+      {
+        main: "src/{dirname}/{basename}.ts",
+        alternate: "src/test/{dirname}/{basename}.test.ts"
+      },
+      {
+        main: "app/{dirname}/{basename}.rb",
+        alternate: "test/{dirname}/{basename}_spec.rb"
+      }
+    ]);
+  });
+
+  test("projectionsToAlternatePatterns parses ** and *", () => {
+    const projections: Projection.t = {
+      "src/**/*.ts": { alternate: "src/{dirname}/__test__/{basename}.test.ts" }
+    };
+
+    assert.deepEqual(Projection.projectionsToAlternatePatterns(projections), [
+      {
+        main: "src/{dirname}/{basename}.ts",
+        alternate: "src/{dirname}/__test__/{basename}.test.ts"
+      }
     ]);
   });
 });
