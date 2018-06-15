@@ -1,19 +1,24 @@
 {
   "name": "vscode-alternate",
-  "displayName": "VS Code Open Buffers",
-  "description": "Quickly search your open buffers in VS Code",
+  "displayName": "Alternate File",
+  "description": "Switch to and create spec files for any framework",
   "version": "0.0.1",
   "publisher": "will-wow",
-  "repository": "github:will-wow/vscode-alternate",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/will-wow/vscode-alternate-file.git"
+  },
+  "license": "MIT",
   "engines": {
     "vscode": "^1.23.0"
   },
   "keywords": [
-    "vscode"
+    "alternate", "spec", "test"
   ],
   "categories": [
     "Other"
   ],
+  "icon": "icon.png",
   "activationEvents": [
     "workspaceContains:.projections.json"
   ],

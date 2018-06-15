@@ -10,5 +10,5 @@
       "src/{}.test.ts"
     ]
   },
-  "app/*.rb": { "alternate": "test/{}_spec.rb" }
+  "app/*.rb": { "alternate": "spec/{}_spec.rb" }
 }
