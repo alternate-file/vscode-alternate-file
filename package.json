@@ -2,7 +2,7 @@
   "name": "vscode-alternate-file",
   "displayName": "Alternate File",
   "description": "Switch to and create spec files for any framework",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "will-wow",
   "repository": {
     "type": "git",

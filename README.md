@@ -2,11 +2,11 @@
 
 In Vim, you can often go to the "alternate file" for the active buffer - usually the spec file for an implementation, or vice versa - by pressing `:A`. This extension adds that functionality to VS Code.
 
-VSCode-Alternate reads a config file base on the `.projectionist.json` file from [Tim Pope's Projectionist](https://github.com/tpope/vim-projectionist). This lets you specify where the spec files for different types of files in your project are set up. One you add a `.projectionist.json` (and reload your editor), you can then jump between an implementation and spec file, and optionally create empty files if they don't exist.
+VSCode-Alternate reads a config file base on the `.projections.json` file from [Tim Pope's Projectionist](https://github.com/tpope/vim-projectionist). This lets you specify where the spec files for different types of files in your project are set up. One you add a `.projections.json` (and reload your editor), you can then jump between an implementation and spec file, and optionally create empty files if they don't exist.
 
 ## Features
 
-All commands are under the control pane. Or, you can set up [shortcuts](shortcuts).
+All commands are under the control pane. Or, you can set up [shortcuts](#shortcuts).
 
 - `Alternate File` - Switch to the alternate file (if found) in the current pane
 - `Split Alternate File` - Switch to the alternate file (if found) in a split pane
@@ -86,6 +86,7 @@ Unfortunately you don't seem to be able to add your own ex-commands to vscode-vi
 
 ## Roadmap
 
+- Watch the .projections.json file for changes
 - Support all the transformations from Projectionist, not just `dirname` and `basename`.
 - Support the "type" attribute in `.projections.json`, and allow for switching by filetype, like "controller".
 
