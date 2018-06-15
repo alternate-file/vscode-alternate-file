@@ -6,12 +6,12 @@ VSCode-Alternate reads a config file base on the `.projectionist.json` file from
 
 ## Features
 
-All commands are under the control pane. Or, you can set up [shortcuts](#Shortcuts)
+All commands are under the control pane. Or, you can set up [shortcuts](shortcuts).
 
-`Alternate File` - Switch to the alternate file (if found) in the current pane
-`Split Alternate File` - Switch to the alternate file (if found) in a split pane
-`Create Alternate File` - Switch to the alternate file (if found) in the current pane. If not found, create the file.
-`Create Split Alternate File` - Switch to the alternate file (if found) in a split pane. If not found, create the file.
+- `Alternate File` - Switch to the alternate file (if found) in the current pane
+- `Split Alternate File` - Switch to the alternate file (if found) in a split pane
+- `Create Alternate File` - Switch to the alternate file (if found) in the current pane. If not found, create the file.
+- `Create Split Alternate File` - Switch to the alternate file (if found) in a split pane. If not found, create the file.
 
 ## .projections.json
 
