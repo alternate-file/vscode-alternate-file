@@ -1,8 +1,8 @@
-# vscode-alternate
+# vscode-alternate-file
 
 In Vim, you can often go to the "alternate file" for the active buffer - usually the spec file for an implementation, or vice versa - by pressing `:A`. This extension adds that functionality to VS Code.
 
-VSCode-Alternate reads a config file base on the `.projections.json` file from [Tim Pope's Projectionist](https://github.com/tpope/vim-projectionist). This lets you specify where the spec files for different types of files in your project are set up. One you add a `.projections.json` (and reload your editor), you can then jump between an implementation and spec file, and optionally create empty files if they don't exist.
+VSCode-Alternate reads a config file based on the `.projections.json` file from [Tim Pope's Projectionist](https://github.com/tpope/vim-projectionist). This lets you specify where the spec files for different types of files in your project are set up. One you add a `.projections.json` (and reload your editor), you can then jump between an implementation and spec file, and optionally create empty files if they don't exist.
 
 ## Features
 
@@ -31,7 +31,7 @@ Note that this isn't part of the original `projectionist` spec, but it's sometim
 
 ### Examples
 
-```json
+```js
 {
   // Basic
   "app/*.js": { "alternate": "app/{}.spec.js" },
@@ -40,7 +40,7 @@ Note that this isn't part of the original `projectionist` spec, but it's sometim
   // Globbed implementation
   "src/**/src/*.js": { "alternate": "test/{}/_test.js" },
   // Multiple alternatives
-  "app/*.jsx": { "alternates": ["app/{}.spec.jsx", "app/{}.spec.js", "spec/js/{}_spec.js] }
+  "app/*.jsx": { "alternates": ["app/{}.spec.jsx", "app/{}.spec.js", "spec/js/{}_spec.js"] }
 }
 ```
 

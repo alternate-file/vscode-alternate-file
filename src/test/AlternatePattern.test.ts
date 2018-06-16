@@ -25,9 +25,7 @@ suite("AlternatePattern", () => {
 
   test("alternatePath finds alternate for short path", () => {
     assert.equal(
-      AlternatePattern.alternatePath("app/foo.rb")(
-        patterns[1]
-      ),
+      AlternatePattern.alternatePath("app/foo.rb")(patterns[1]),
       "test/foo_spec.rb"
     );
   });

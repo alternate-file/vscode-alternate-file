@@ -13,7 +13,9 @@
     "vscode": "^1.23.0"
   },
   "keywords": [
-    "alternate", "spec", "test"
+    "alternate",
+    "spec",
+    "test"
   ],
   "categories": [
     "Other"
