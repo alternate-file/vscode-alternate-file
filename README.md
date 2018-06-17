@@ -94,6 +94,7 @@ Unfortunately you don't seem to be able to add your own ex-commands to vscode-vi
 
 ### Master
 
+- Better error messages
 - Watch .projections.json for changes
 
 ### 0.0.1
