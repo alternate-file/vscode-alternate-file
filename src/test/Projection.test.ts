@@ -37,7 +37,7 @@ suite("Projection", () => {
   test("projectionsToAlternatePatterns parses multiple", () => {
     const projections: Projection.t = {
       "src/*.ts": {
-        alternates: [
+        alternate: [
           "src/test/{}.test.ts",
           "src/{dirname}/__test__/{basename}.test.ts"
         ]

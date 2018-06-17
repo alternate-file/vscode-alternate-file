@@ -10,8 +10,7 @@ export interface t {
 }
 
 export interface SourceData {
-  alternate?: string;
-  alternates?: string[];
+  alternate?: string | string[];
 }
 
 type ProjectionPair = [string, SourceData];
@@ -50,16 +49,16 @@ const readFile: (filename: string) => Promise<Buffer> = promiseify(fs.readFile);
 const parseProjections: (file: string) => t = JSON.parse;
 
 const splitOutAlternates = (pair: ProjectionPair): SingleProjectionPair[] => {
-  const [main, { alternate, alternates }] = pair;
+  const [main, { alternate }] = pair;
+
+  if (Array.isArray(alternate)) {
+    return alternate.map(
+      foo => [main, { alternate: foo }] as SingleProjectionPair
+    );
+  }
 
   if (alternate) {
     return [[main, { alternate }]] as SingleProjectionPair[];
-  }
-
-  if (alternates) {
-    return alternates.map(
-      foo => [main, { alternate: foo }] as SingleProjectionPair
-    );
   }
 
   throw new Error(`${main} is missing the alternate key`);

@@ -5,7 +5,7 @@
     "alternate": "src/{dirname}/test/{basename}.test.ts"
   },
   "src/*.ts": {
-    "alternates": [
+    "alternate": [
       "src/{dirname}/__test__/{basename}.test.ts",
       "src/{}.test.ts"
     ]

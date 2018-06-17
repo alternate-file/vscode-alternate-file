@@ -25,7 +25,7 @@ If your test paths have an extra directly in the middle of them, like with `/app
 
 ### Multiple alternates
 
-If your project is inconsistent about where specs go (it happens to the best of us), you can also pass an array of `alternates`. The extension will look for a file matching the first alternate, then the second, and so on. When you create an alternate file, it will always follow the first pattern.
+If your project is inconsistent about where specs go (it happens to the best of us), you can also pass an array to `alternate`. The extension will look for a file matching the first alternate, then the second, and so on. When you create an alternate file, it will always follow the first pattern.
 
 Note that this isn't part of the original `projectionist` spec, but it's sometimes handy.
 
@@ -40,7 +40,7 @@ Note that this isn't part of the original `projectionist` spec, but it's sometim
   // Globbed implementation
   "src/**/src/*.js": { "alternate": "test/{}/_test.js" },
   // Multiple alternatives
-  "app/*.jsx": { "alternates": ["app/{}.spec.jsx", "app/{}.spec.js", "spec/js/{}_spec.js"] }
+  "app/*.jsx": { "alternate": ["app/{}.spec.jsx", "app/{}.spec.js", "spec/js/{}_spec.js"] }
 }
 ```
 
@@ -94,6 +94,7 @@ Unfortunately you don't seem to be able to add your own ex-commands to vscode-vi
 
 ### Master
 
+- Rename "alternates" array to "alternate"
 - Better error messages
 - Watch .projections.json for changes
 

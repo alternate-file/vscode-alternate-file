@@ -1,7 +1,7 @@
 {
   "*.js": { "alternate": "{dirname}/__test__/{basename}.test.js" },
   "*.jsx": {
-    "alternates": [
+    "alternate": [
       "{dirname}/__test__/{basename}.test.jsx",
       "{dirname}/__test__/{basename}.test.js"
     ]
