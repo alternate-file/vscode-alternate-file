@@ -92,6 +92,10 @@ Unfortunately you don't seem to be able to add your own ex-commands to vscode-vi
 
 ## Release Notes
 
+### Master
+
+- Watch .projections.json for changes
+
 ### 0.0.1
 
 - Support switching to and creating alternative files

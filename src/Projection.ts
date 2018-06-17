@@ -21,10 +21,15 @@ const projectionsFilename = ".projections.json";
 const starRegex = /\*/;
 const basenameRegex = /\{\}|\{basename\}/;
 
-export const findProjections = (): Thenable<t> =>
-  FilePath.findFileUri(projectionsFilename)
-    .then(readFileByUri)
-    .then(parseProjections);
+export const findProjections = async (): Promise<t> => {
+  const uri = await FilePath.findFileUri(projectionsFilename);
+  const fileData = await readFileByUri(uri);
+
+  // Handle blank files, so creation doesn't throw an error.
+  if (!fileData) return {};
+
+  return parseProjections(fileData);
+};
 
 export const projectionsToAlternatePatterns = (
   projections: t
@@ -57,7 +62,7 @@ const splitOutAlternates = (pair: ProjectionPair): SingleProjectionPair[] => {
     );
   }
 
-  throw new Error(`${main} is missing alternates`);
+  throw new Error(`${main} is missing the alternate key`);
 };
 
 const projectionPairToAlternatePattern = ([
