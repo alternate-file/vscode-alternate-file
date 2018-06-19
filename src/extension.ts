@@ -18,7 +18,7 @@ export const activate = async (
 
   projectionsWatcher.onDidChange(registerCommandsWithContext);
   projectionsWatcher.onDidCreate(registerCommandsWithContext);
-  projectionsWatcher.onDidDelete(deregisterCommands);
+  projectionsWatcher.onDidDelete(registerEmptyCommands(context));
 };
 
 const deregisterCommands = () => {
@@ -61,9 +61,40 @@ const registerCommands = (context: vscode.ExtensionContext) => async () => {
       ? `${errorMessagePrefix}: ${e.message}`
       : errorMessagePrefix;
     vscode.window.showErrorMessage(message);
+    registerEmptyCommands(context)();
 
     return [];
   }
 };
+
+const registerEmptyCommands = (context: vscode.ExtensionContext) => () => {
+  deregisterCommands();
+
+  commands = [
+    vscode.commands.registerCommand(
+      "alternate.alternateFile",
+      showMissingProjectionsCommandError
+    ),
+    vscode.commands.registerCommand(
+      "alternate.alternateFileInSplit",
+      showMissingProjectionsCommandError
+    ),
+    vscode.commands.registerCommand(
+      "alternate.createAlternateFile",
+      showMissingProjectionsCommandError
+    ),
+    vscode.commands.registerCommand(
+      "alternate.createAlternateFileInSplit",
+      showMissingProjectionsCommandError
+    )
+  ];
+
+  commands.forEach(command => context.subscriptions.push(command));
+};
+
+const showMissingProjectionsCommandError = () =>
+  vscode.window.showErrorMessage(
+    "Can't run command - please create a .projections.json first."
+  );
 
 export function deactivate() {}

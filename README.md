@@ -92,6 +92,10 @@ Unfortunately you don't seem to be able to add your own ex-commands to vscode-vi
 
 ## Release Notes
 
+### master
+
+- Better error messages when trying to run a command without a `.projections.json`
+
 ### 0.1.0
 
 - Rename "alternates" array to "alternate"
