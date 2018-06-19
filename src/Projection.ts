@@ -4,6 +4,7 @@ import * as vscode from "vscode";
 import * as utils from "./utils";
 import * as AlternatePattern from "./AlternatePattern";
 import * as FilePath from "./FilePath";
+import * as Workspace from "./Workspace";
 
 export interface t {
   [sourcePattern: string]: SourceData;
@@ -19,6 +20,9 @@ type SingleProjectionPair = [string, { alternate: string }];
 const projectionsFilename = ".projections.json";
 const starRegex = /\*/;
 const basenameRegex = /\{\}|\{basename\}/;
+const sampleProjections = `{
+  "src/*.js": { "alternate": "src/{}.test.js" }
+}`;
 
 export const findProjections = async (): Promise<t> => {
   const uri = await FilePath.findFileUri(projectionsFilename);
@@ -44,9 +48,15 @@ const readFileByUri = async (uri: vscode.Uri): Promise<string> => {
   return data.toString();
 };
 
-export const create = () => {
+export const create = async (): Promise<vscode.TextEditor> => {
+  const projectionsPath = Workspace.pathInActiveWorkspace(projectionsFilename);
+  if (!projectionsPath) throw new Error("No workspace open!");
 
-}
+  const editor = await FilePath.create(0, projectionsPath);
+  await FilePath.insert(sampleProjections, editor);
+
+  return Promise.resolve(editor);
+};
 
 const readFile: (filename: string) => Promise<Buffer> = promiseify(fs.readFile);
 

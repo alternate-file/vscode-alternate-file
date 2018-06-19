@@ -22,11 +22,15 @@
   ],
   "icon": "icon.png",
   "activationEvents": [
-    "workspaceContains:.projections.json"
+    "*"
   ],
   "main": "./out/extension",
   "contributes": {
     "commands": [
+      {
+        "command": "alternate.configureAlternateFile",
+        "title": "Configure Alternate File" 
+      },
       {
         "command": "alternate.alternateFile",
         "title": "Alternate File"

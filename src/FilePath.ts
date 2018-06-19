@@ -4,16 +4,32 @@ import { exists } from "./utils";
 
 export type t = string;
 
-export const open = (viewColumn: number, filePath: t | null): void => {
-  if (!filePath) return;
+export const open = (
+  viewColumn: number,
+  filePath: t | null
+): Promise<vscode.TextEditor | null> => {
+  if (!filePath) return Promise.resolve(null);
 
-  openFileInPane(viewColumn, filePath);
+  return openFileInPane(viewColumn, filePath);
 };
 
-export const create = (viewColumn: number, filePath: t): void => {
-  if (!filePath) return;
+export const create = (
+  viewColumn: number,
+  filePath: t
+): Promise<vscode.TextEditor> => {
+  return createFileInPane(viewColumn, filePath);
+};
 
-  createFileInPane(viewColumn, filePath);
+export const insert = async (
+  text: string,
+  editor: vscode.TextEditor,
+  line: number = 0,
+  character: number = 0
+): Promise<boolean> => {
+  const position = new vscode.Position(line, character);
+  return await editor.edit((editBuilder: vscode.TextEditorEdit) => {
+    editBuilder.insert(position, text);
+  });
 };
 
 export const findExisting = async (filePaths: t[]): Promise<t> => {
@@ -32,9 +48,12 @@ const findFirstUriPath = (uris: (vscode.Uri)[]): t | null => {
   return existingFile ? existingFile.path : null;
 };
 
-const openFileInPane = (viewColumn: number, filePath: t): void => {
+const openFileInPane = async (
+  viewColumn: number,
+  filePath: t
+): Promise<vscode.TextEditor> => {
   const fileUri = vscode.Uri.file(filePath);
-  vscode.window.showTextDocument(fileUri, { viewColumn });
+  return await vscode.window.showTextDocument(fileUri, { viewColumn });
 };
 
 const createFileInPane = async (
