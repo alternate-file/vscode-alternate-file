@@ -12,11 +12,13 @@ suite("Projection", () => {
     assert.deepEqual(Projection.projectionsToAlternatePatterns(projections), [
       {
         main: "src/{dirname}/{basename}.ts",
-        alternate: "src/test/{dirname}/{basename}.test.ts"
+        alternate: "src/test/{dirname}/{basename}.test.ts",
+        template: []
       },
       {
         main: "app/{dirname}/{basename}.rb",
-        alternate: "test/{dirname}/{basename}_spec.rb"
+        alternate: "test/{dirname}/{basename}_spec.rb",
+        template: []
       }
     ]);
   });
@@ -29,7 +31,8 @@ suite("Projection", () => {
     assert.deepEqual(Projection.projectionsToAlternatePatterns(projections), [
       {
         main: "src/{dirname}/{basename}.ts",
-        alternate: "src/{dirname}/__test__/{basename}.test.ts"
+        alternate: "src/{dirname}/__test__/{basename}.test.ts",
+        template: []
       }
     ]);
   });
@@ -40,18 +43,21 @@ suite("Projection", () => {
         alternate: [
           "src/test/{}.test.ts",
           "src/{dirname}/__test__/{basename}.test.ts"
-        ]
+        ],
+        template: []
       }
     };
 
     assert.deepEqual(Projection.projectionsToAlternatePatterns(projections), [
       {
         main: "src/{dirname}/{basename}.ts",
-        alternate: "src/test/{dirname}/{basename}.test.ts"
+        alternate: "src/test/{dirname}/{basename}.test.ts",
+        template: []
       },
       {
         main: "src/{dirname}/{basename}.ts",
-        alternate: "src/{dirname}/__test__/{basename}.test.ts"
+        alternate: "src/{dirname}/__test__/{basename}.test.ts",
+        template: []
       }
     ]);
   });

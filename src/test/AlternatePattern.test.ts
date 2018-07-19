@@ -6,11 +6,13 @@ suite("AlternatePattern", () => {
   const patterns: AlternatePattern.t[] = [
     {
       main: "src/{dirname}/{basename}.ts",
-      alternate: "src/{dirname}/__test__/{basename}.test.ts"
+      alternate: "src/{dirname}/__test__/{basename}.test.ts",
+      template: []
     },
     {
       main: "app/{dirname}/{basename}.rb",
-      alternate: "test/{dirname}/{basename}_spec.rb"
+      alternate: "test/{dirname}/{basename}_spec.rb",
+      template: []
     }
   ];
 

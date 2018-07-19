@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import * as promiseify from "util.promisify";
+import * as promisify from "util.promisify";
 import * as vscode from "vscode";
 import * as utils from "./utils";
 import * as AlternatePattern from "./AlternatePattern";
@@ -11,10 +11,14 @@ export interface t {
 
 export interface SourceData {
   alternate?: string | string[];
+  template?: string[];
 }
 
 type ProjectionPair = [string, SourceData];
-type SingleProjectionPair = [string, { alternate: string }];
+type SingleProjectionPair = [
+  string,
+  { alternate: string; template?: string[] }
+];
 
 const projectionsFilename = ".projections.json";
 const starRegex = /\*/;
@@ -34,7 +38,7 @@ export const projectionsToAlternatePatterns = (
   projections: t
 ): AlternatePattern.t[] => {
   const pairs = utils.toPairs(projections) as ProjectionPair[];
-  const allPairs = utils.flatten(pairs.map(splitOutAlternates));
+  const allPairs = utils.flatMap(splitOutAlternates)(pairs);
 
   return allPairs.map(projectionPairToAlternatePattern);
 };
@@ -44,36 +48,29 @@ const readFileByUri = async (uri: vscode.Uri): Promise<string> => {
   return data.toString();
 };
 
-export const create = () => {
-
-}
-
-const readFile: (filename: string) => Promise<Buffer> = promiseify(fs.readFile);
+const readFile: (filename: string) => Promise<Buffer> = promisify(fs.readFile);
 
 const parseProjections: (file: string) => t = JSON.parse;
 
 const splitOutAlternates = (pair: ProjectionPair): SingleProjectionPair[] => {
-  const [main, { alternate }] = pair;
+  const [main, { alternate, template }] = pair;
 
   if (Array.isArray(alternate)) {
     return alternate.map(
-      foo => [main, { alternate: foo }] as SingleProjectionPair
+      alternate => [main, { alternate, template }] as SingleProjectionPair
     );
   }
 
-  if (alternate) {
-    return [[main, { alternate }]] as SingleProjectionPair[];
-  }
-
-  throw new Error(`${main} is missing the alternate key`);
+  return [[main, { alternate, template }]] as SingleProjectionPair[];
 };
 
 const projectionPairToAlternatePattern = ([
   main,
-  { alternate }
+  { alternate, template }
 ]: SingleProjectionPair): AlternatePattern.t => ({
   main: mainPathToAlternate(main),
-  alternate: alternatePathToAlternate(alternate)
+  alternate: alternatePathToAlternate(alternate),
+  template: template || []
 });
 
 const mainPathToAlternate = (path: string): string => {
@@ -86,10 +83,8 @@ const mainPathToAlternate = (path: string): string => {
   return taggedPath.replace("**", "{dirname}").replace("*", "{basename}");
 };
 
-const alternatePathToAlternate = (path: string): string => {
-  if (!basenameRegex.test(path)) {
-    throw new Error(`${path} is an invalid alternate projection path`);
-  }
+const alternatePathToAlternate = (path: string): string | null => {
+  if (!basenameRegex.test(path)) return null;
 
   return path.replace(/\{\}/g, "{dirname}/{basename}");
 };

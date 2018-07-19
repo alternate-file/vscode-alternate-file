@@ -10,10 +10,14 @@ export const open = (viewColumn: number, filePath: t | null): void => {
   openFileInPane(viewColumn, filePath);
 };
 
-export const create = (viewColumn: number, filePath: t): void => {
+export const create = (
+  viewColumn: number,
+  filePath: t,
+  template: string[] = []
+): void => {
   if (!filePath) return;
 
-  createFileInPane(viewColumn, filePath);
+  createFileInPane(viewColumn, filePath, template);
 };
 
 export const findExisting = async (filePaths: t[]): Promise<t> => {
@@ -39,10 +43,23 @@ const openFileInPane = (viewColumn: number, filePath: t): void => {
 
 const createFileInPane = async (
   viewColumn: number,
-  filePath: t
+  filePath: t,
+  template: string[]
 ): Promise<vscode.TextEditor> => {
   const newFileUri = vscode.Uri.parse(`untitled:${filePath}`);
+
+  // Open and display document
   const doc = await vscode.workspace.openTextDocument(newFileUri);
 
+  // Add template text.
+  writeToDoc(doc, template.join("\n"));
+
   return vscode.window.showTextDocument(doc, { viewColumn });
+};
+
+const writeToDoc = (doc: vscode.TextDocument, text: string): void => {
+  const firstLine = doc.lineAt(0);
+  const workspaceEdit = new vscode.WorkspaceEdit();
+
+  workspaceEdit.insert(doc.uri, firstLine.range.start, text);
 };

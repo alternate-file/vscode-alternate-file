@@ -1,6 +1,7 @@
 export interface t {
+  alternate: string | null;
   main: string;
-  alternate: string;
+  template: string[];
 }
 import * as FilePath from "./FilePath";
 
@@ -14,11 +15,31 @@ export const alternatePath = (path: string) => ({
   alternatePathForSide(alternate, main, path) ||
   alternatePathForSide(main, alternate, path);
 
+export const templateForPath = (path: string) => (pattern: t): string[] | null =>
+  matchPath(pattern.main, path) && pattern.template ? pattern.template : null;
+
 const alternatePathForSide = (
-  pathPattern: string,
-  alternatePattern: string,
+  pathPattern: string | null,
+  alternatePattern: string | null,
   path: string
 ): FilePath.t | null => {
+  if (!pathPattern || !alternatePattern) return null;
+
+  const matches = matchPath(pathPattern, path);
+
+  if (!matches) return null;
+
+  const { dirname, basename } = matches;
+
+  return alternatePattern
+    .replace("{dirname}/", dirname ? dirname + "/" : "")
+    .replace("{basename}", basename);
+};
+
+const matchPath = (
+  pathPattern: string,
+  path: string
+): { dirname: string; basename: string } | null => {
   const regex = patternToRegex(pathPattern);
   const matches = path.match(regex);
 
@@ -27,14 +48,12 @@ const alternatePathForSide = (
   const dirname = matches[1];
   const basename = matches[2];
 
-  return alternatePattern
-    .replace("{dirname}/", dirname ? dirname + "/" : "")
-    .replace("{basename}", basename);
+  return { dirname, basename };
 };
 
 const patternToRegex = (pathPattern: string): RegExp => {
   const regexPattern = pathPattern
     .replace(dirnameRegex, "(?:(.+)/)?")
     .replace(basenameRegex, "([^/]+)");
-  return new RegExp(regexPattern);
+  return new RegExp(`^${regexPattern}$`);
 };

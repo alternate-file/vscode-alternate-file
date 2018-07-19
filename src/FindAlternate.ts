@@ -47,7 +47,13 @@ export const createFile = (
       const workspacePath = currentWorkspacePath(activeEditor);
 
       if (newPath && workspacePath) {
-        FilePath.create(viewColumn, path.join(workspacePath, newPath));
+        const template = findTemplate(patterns, newPath);
+
+        FilePath.create(
+          viewColumn,
+          path.join(workspacePath, newPath),
+          template || undefined
+        );
       } else {
         vscode.window.showErrorMessage(
           `Couldn't create an alternate file for ${currentPath}: it didn't match any known patterns.`
@@ -104,6 +110,11 @@ const findAlternatePath = async (
     return { error: possiblePaths };
   }
 };
+
+const findTemplate = (
+  patterns: AlternatePattern.t[],
+  path: string
+): string[] | null => findValue(AlternatePattern.templateForPath(path), patterns);
 
 const makeAlternatePath = (
   patterns: AlternatePattern.t[],

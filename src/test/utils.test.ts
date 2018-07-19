@@ -21,4 +21,8 @@ suite("utils", () => {
       ["b", "b"]
     ]);
   });
+
+  test("flatMap", () => {
+    assert.deepEqual(utils.flatMap(x => [x, x])([1, 2]), [1, 1, 2, 2]);
+  });
 });
