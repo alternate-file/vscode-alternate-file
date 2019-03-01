@@ -44,9 +44,7 @@ const readFileByUri = async (uri: vscode.Uri): Promise<string> => {
   return data.toString();
 };
 
-export const create = () => {
-
-}
+export const create = () => {};
 
 const readFile: (filename: string) => Promise<Buffer> = promiseify(fs.readFile);
 
