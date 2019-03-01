@@ -56,15 +56,15 @@
     "format-prettier": "prettier --write \"**/*.{ts,json}\""
   },
   "devDependencies": {
-    "@types/mocha": "^2.2.42",
+    "@types/mocha": "^5.2.6",
     "@types/node": "^7.0.65",
-    "chai": "^4.1.2",
-    "prettier": "^1.13.0",
-    "tslint": "^5.8.0",
-    "tslint-config-airbnb": "^5.9.2",
-    "tslint-config-prettier": "^1.13.0",
-    "typescript": "^2.6.1",
-    "vscode": "^1.1.6"
+    "chai": "^4.2.0",
+    "prettier": "^1.16.4",
+    "tslint": "^5.13.1",
+    "tslint-config-airbnb": "^5.11.1",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.3.3333",
+    "vscode": "^1.1.30"
   },
   "dependencies": {
     "@types/util.promisify": "^1.0.0",

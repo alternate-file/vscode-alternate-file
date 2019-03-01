@@ -85,6 +85,16 @@ If you use [vscode-vim](https://github.com/VSCodeVim/Vim), it might be easier to
 
 Unfortunately you don't seem to be able to add your own ex-commands to vscode-vim, so you can't set up `:A`.
 
+## Contributing
+
+### Run Tests
+
+Click the Debug button in the sidebar and run `Extension Tests`
+
+### Deploy to a local VS Code
+
+Click the Debug button in the sidebar and run `Extension`
+
 ## Roadmap
 
 - Support all the transformations from Projectionist, not just `dirname` and `basename`.
