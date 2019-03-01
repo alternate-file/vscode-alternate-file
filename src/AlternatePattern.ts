@@ -28,7 +28,7 @@ const alternatePathForSide = (
   const basename = matches[2];
 
   return alternatePattern
-    .replace("{dirname}/", dirname ? dirname + "/" : "")
+    .replace("{dirname}/", dirname ? `${dirname}/` : "")
     .replace("{basename}", basename);
 };
 

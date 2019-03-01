@@ -2,8 +2,7 @@ export const cons = <T>(x: T, xs: T[]): T[] => [x].concat(xs);
 
 export const contains = <T>(x: T, xs: T[]): boolean => xs.indexOf(x) !== -1;
 
-export const map = <T, U>(f: ((element: T) => U)) => (xs: T[]): U[] =>
-  xs.map(f);
+export const map = <T, U>(f: (element: T) => U) => (xs: T[]): U[] => xs.map(f);
 
 export const toPairs = <T, U extends keyof T>(obj: T): [U, T[U]][] => {
   const keys: U[] = Object.keys(obj) as U[];
@@ -25,7 +24,7 @@ export const uniqueCons = <T>(x: T, xs: T[]): T[] =>
 
 export const identity = <T>(x: T): T => x;
 
-export const find = <T>(f: ((element: T) => boolean), xs: T[]): T | null => {
+export const find = <T>(f: (element: T) => boolean, xs: T[]): T | null => {
   if (xs.length === 0) return null;
 
   const [head, ...tail] = xs;
@@ -33,7 +32,7 @@ export const find = <T>(f: ((element: T) => boolean), xs: T[]): T | null => {
   return f(head) ? head : find(f, tail);
 };
 
-export const findValue = <T, U>(f: ((element: T) => U), xs: T[]): U | null => {
+export const findValue = <T, U>(f: (element: T) => U, xs: T[]): U | null => {
   if (xs.length === 0) return null;
 
   const [head, ...tail] = xs;
@@ -48,7 +47,5 @@ export const exists = (x: any): boolean =>
 
 export const compact = <T>(xs: (T | null)[]): T[] => xs.filter(exists) as T[];
 
-export const has = <T, P extends keyof T>(prop: P, obj: T): T[P] =>
-  Object.prototype.hasOwnProperty.call(obj, prop);
-
-export const flatten = <T>(xss: T[][]): T[] => [].concat.apply([], xss);
+export const flatten = <T>(xss: T[][]): T[] =>
+  ([] as T[]).concat.apply([], xss);
