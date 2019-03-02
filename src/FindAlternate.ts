@@ -93,7 +93,7 @@ const relativePath = (activeEditor: vscode.TextEditor) => {
 const findAlternatePath = async (
   patterns: AlternatePattern.t[],
   path: string
-): Promise<Result.t<string, string[]>> => {
+): Promise<Result.R<string, string[]>> => {
   const possiblePaths = compact(
     patterns.map(AlternatePattern.alternatePath(path))
   );

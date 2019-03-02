@@ -1,9 +1,13 @@
 import * as fs from "fs";
 import { promisify } from "util";
 import * as vscode from "vscode";
-import * as utils from "./utils";
+import * as R from "remeda";
 import * as AlternatePattern from "./AlternatePattern";
 import * as FilePath from "./FilePath";
+
+import * as File from "./File";
+import * as Result from "../Result";
+import { pipeAsync } from "./asyncPipe";
 
 export interface t {
   [sourcePattern: string]: SourceData;
@@ -20,21 +24,23 @@ const projectionsFilename = ".projections.json";
 const starRegex = /\*/;
 const basenameRegex = /\{\}|\{basename\}/;
 
-export const findProjections = async (): Promise<t> => {
-  const uri = await FilePath.findFileUri(projectionsFilename);
-  const fileData = await readFileByUri(uri);
-
-  // Handle blank files, so creation doesn't throw an error.
-  if (!fileData) return {};
-
-  return parseProjections(fileData);
+export const findProjections = async (
+  userFilePath: string
+): Result.P<t, any> => {
+  return pipeAsync(
+    userFilePath,
+    File.findFile(projectionsFilename),
+    Result.asyncChainOk(File.readFile),
+    Result.mapOk((data: string): string => (data === "" ? "{}" : data)),
+    Result.chainOk((x: string) => File.parseJson<t>(x))
+  );
 };
 
 export const projectionsToAlternatePatterns = (
   projections: t
 ): AlternatePattern.t[] => {
-  const pairs = utils.toPairs(projections) as ProjectionPair[];
-  const allPairs = utils.flatten(pairs.map(splitOutAlternates));
+  const pairs = R.toPairs(projections) as ProjectionPair[];
+  const allPairs = R.unnest(pairs.map(splitOutAlternates));
 
   return allPairs.map(projectionPairToAlternatePattern);
 };

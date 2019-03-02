@@ -1,3 +1,5 @@
+import { reduce } from "remeda";
+
 export const cons = <T>(x: T, xs: T[]): T[] => [x].concat(xs);
 
 export const contains = <T>(x: T, xs: T[]): boolean => xs.indexOf(x) !== -1;
