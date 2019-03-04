@@ -28,5 +28,4 @@ export const activate = async (
   commands.forEach(command => context.subscriptions.push(command));
 };
 
-
 export function deactivate() {}

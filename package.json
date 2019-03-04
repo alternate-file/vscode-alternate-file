@@ -21,7 +21,10 @@
   "categories": [
     "Other"
   ],
-  "icon": "icon.png",
+  "bin": {
+    "alt": "./bin/cli.js"
+  },
+  "icon": "assets/icon.png",
   "activationEvents": [
     "workspaceContains:.projections.json"
   ],

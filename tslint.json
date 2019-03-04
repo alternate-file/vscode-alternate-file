@@ -4,5 +4,8 @@
   "rules": {
     "class-name": false
   },
-  "rulesDirectory": []
+  "rulesDirectory": [],
+  "linterOptions": {
+    "exclude": ["test-project"]
+  }
 }
