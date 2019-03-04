@@ -1,5 +1,8 @@
 import * as path from "path";
 
+/**
+ * A computer-friendly representation of paths for switching between alternate files.
+ */
 export interface t {
   main: string;
   alternate: string;
@@ -55,5 +58,8 @@ const patternToRegex = (pathPattern: string): RegExp => {
 
 const combinePaths = (projectionsPath: string, filePattern: string): string => {
   const projectionsDir = path.dirname(projectionsPath);
-  return path.resolve(projectionsDir, filePattern);
+  const fullPath = path.resolve(projectionsDir, filePattern);
+  const normalizedPath = path.normalize(fullPath);
+
+  return normalizedPath.replace(/\\/g, "\\\\");
 };

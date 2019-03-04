@@ -1,4 +1,4 @@
-import * as Projection from "./Projection";
+import * as Projection from "./Projections";
 
 describe("Projection", () => {
   it("projectionsToAlternatePatterns parses *", () => {

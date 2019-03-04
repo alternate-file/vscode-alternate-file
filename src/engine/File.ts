@@ -17,9 +17,11 @@ export type t = string;
 export const findFile = (fileName: string) => async (
   fromFilePath: string
 ): Result.P<string, string> => {
-  const path = await findUp(fileName, { cwd: fromFilePath });
+  const filePath = await findUp(fileName, { cwd: fromFilePath });
 
-  return path === null ? Result.error("not found") : Result.ok(path);
+  return filePath === null
+    ? Result.error("file not found")
+    : Result.ok(filePath);
 };
 
 /**

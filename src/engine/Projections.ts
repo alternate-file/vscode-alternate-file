@@ -5,19 +5,17 @@ import * as AlternatePattern from "./AlternatePattern";
 import * as File from "./File";
 import * as Result from "../result/Result";
 import { pipeAsync } from "../result/asyncPipe";
+import * as AlternateFileNotFoundError from "./AlternateFileNotFoundError";
 
+/**
+ * the data type for a .projections.json file.
+ */
 export interface t {
   [sourcePattern: string]: SourceData;
 }
 
 export interface SourceData {
   alternate?: string | string[];
-}
-
-export interface ProjectionError {
-  message: string;
-  startingFile: string;
-  alternatesAttempted?: string[];
 }
 
 type ProjectionPair = [string, SourceData];
@@ -34,12 +32,12 @@ const basenameRegex = /\{\}|\{basename\}/;
  */
 export const findAlternateFile = async (
   userFilePath: string
-): Result.P<string, ProjectionError> => {
+): Result.P<string, AlternateFileNotFoundError.t> => {
   const result = await findProjectionsFile(userFilePath);
 
   if (!Result.isOk(result)) {
     return Result.error({
-      message: "no result found",
+      message: `No ${projectionsFilename} found as a parent of ${userFilePath}`,
       startingFile: userFilePath
     });
   }
@@ -64,18 +62,31 @@ export const findAlternateFile = async (
  */
 export const findOrCreateAlternateFile = async (
   userFilePath: string
-): Result.P<string, string> => {
+): Result.P<string, AlternateFileNotFoundError.t> => {
   return pipeAsync(
     userFilePath,
     findAlternateFile,
-    Result.asyncChainError(async (error: ProjectionError) => {
+    Result.asyncChainError(async (error: AlternateFileNotFoundError.t) => {
       const alternatesAttempted = error.alternatesAttempted || [];
       if (alternatesAttempted.length === 0) {
-        return Result.error(
-          `Couldn't create an alternate file for '${userFilePath}': it didn't match any known patterns.`
-        );
+        return Result.error({
+          ...error,
+          message: `Couldn't create an alternate file for '${userFilePath}': it didn't match any known patterns.`
+        });
       }
-      return File.makeFile(alternatesAttempted[0]);
+
+      const newAlternateFile = alternatesAttempted[0];
+
+      return Result.either(
+        await File.makeFile(newAlternateFile),
+        always(Result.ok(newAlternateFile)),
+        always(
+          Result.error({
+            ...error,
+            message: `Couldn't create file ${newAlternateFile}`
+          })
+        )
+      );
     })
   );
 };
@@ -170,3 +181,5 @@ const alternatePathToAlternate = (path: string): string => {
 
   return path.replace(/\{\}/g, "{dirname}/{basename}");
 };
+
+const always = <T>(x: T) => (): T => x;

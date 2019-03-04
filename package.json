@@ -11,7 +11,7 @@
   "license": "MIT",
   "engines": {
     "vscode": "^1.23.0",
-    "node": "^10.2.0"
+    "node": "^8.11.3"
   },
   "keywords": [
     "alternate",
@@ -51,8 +51,8 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "npm run compile && node ./node_modules/vscode/bin/test",
-    "test-unit": "jest",
+    "integration": "npm run compile && node ./node_modules/vscode/bin/test",
+    "test": "jest",
     "format": "npm run format-tslint && npm run format-prettier",
     "format-tslint": "tslint -p . --config tslint.json",
     "format-prettier": "prettier --write \"**/*.{ts,json}\""
@@ -72,9 +72,8 @@
   "dependencies": {
     "@types/find-up": "^2.1.1",
     "@types/node": "^11.10.0",
-    "@types/ramda": "^0.25.51",
     "find-up": "^3.0.0",
-    "ramda": "^0.26.1",
     "remeda": "0.0.9"
-  }
+  },
+  "jest": {}
 }

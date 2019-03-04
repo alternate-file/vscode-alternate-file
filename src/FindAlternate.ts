@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 
-import * as Projection from "./engine/Projection";
+import * as Projection from "./engine/Projections";
 import * as Result from "./result/Result";
-import * as FilePath from "./FilePath";
+import * as FilePath from "./FilePane";
 
 export interface Options {
   split: boolean;
@@ -15,15 +15,10 @@ export const openFile = ({ split }: Options) => async (): Promise<void> => {
   if (!currentPath) return;
   const viewColumn = nextViewColumn(split, activeEditor);
 
-  const pathResponse = await Projection.findAlternateFile(currentPath);
-
   Result.either(
+    await Projection.findAlternateFile(currentPath),
     newPath => FilePath.open(viewColumn, newPath),
-    possiblePaths =>
-      vscode.window.showErrorMessage(
-        `Couldn't find an alternate file for ${currentPath}. Tried: ${possiblePaths}`
-      ),
-    pathResponse
+    error => vscode.window.showErrorMessage(error.message)
   );
 };
 
@@ -34,14 +29,10 @@ export const createFile = ({ split }: Options) => async (): Promise<void> => {
   if (!currentPath) return;
   const viewColumn = nextViewColumn(split, activeEditor);
 
-  const pathResponse = await Projection.findOrCreateAlternateFile(currentPath);
-
   Result.either(
+    await Projection.findOrCreateAlternateFile(currentPath),
     newPath => FilePath.open(viewColumn, newPath),
-    (errorMessage): void => {
-      vscode.window.showErrorMessage(errorMessage);
-    },
-    pathResponse
+    error => vscode.window.showErrorMessage(error.message)
   );
 };
 
@@ -61,6 +52,7 @@ const nextViewColumn = (
 };
 
 const relativePath = (activeEditor: vscode.TextEditor) => {
-  const path = vscode.workspace.asRelativePath(activeEditor.document.uri);
+  const path = activeEditor.document.uri.path;
+  // const path = vscode.workspace.asRelativePath(activeEditor.document.uri);
   return path ? path.replace(/\\/g, "/") : null;
 };

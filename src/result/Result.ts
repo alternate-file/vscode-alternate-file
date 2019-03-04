@@ -3,8 +3,6 @@
  * @module Result
  */
 
-import { curry } from "ramda";
-
 /**
  * Represents the result of an operation that could succeed or fail.
  */
@@ -223,9 +221,9 @@ export const asyncChainError = <OkData, ErrorMessage, OkOutput, ErrorOutput>(
  * @returns The return value of the function that gets run.
  */
 export const either = <OkData, ErrorMessage, OkOutput, ErrorOutput>(
+  result: Result<OkData, ErrorMessage>,
   ifOk: (ok: OkData) => OkOutput,
-  ifError: (error: ErrorMessage) => ErrorOutput,
-  result: Result<OkData, ErrorMessage>
+  ifError: (error: ErrorMessage) => ErrorOutput
 ): OkOutput | ErrorOutput => {
   if (isOk(result)) {
     return ifOk(result.ok);
@@ -236,15 +234,13 @@ export const either = <OkData, ErrorMessage, OkOutput, ErrorOutput>(
   throw new Error("invalid result");
 };
 
-export const pipedEither = curry(either);
-
 /**
  * Converts a result to a boolean.
  * @param result
  * @returns true if Ok, false if Error
  */
 export const toBoolean = (result: Result<any, any>): boolean =>
-  either(() => true, () => false, result);
+  isOk(result) ? true : false;
 
 export const firstOk = <OkData>(
   results: Result<OkData, any>[]
