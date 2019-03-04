@@ -7,7 +7,7 @@ const { log } = require("../out/utils");
 const main = async () => {
   const fromFile = process.argv[2];
 
-  const result = await Projection.findAlternatePath(fromFile);
+  const result = await Projection.findAlternateFile(fromFile);
 
   Result.either(console.log, console.error, result);
 };

@@ -15,7 +15,7 @@ export const openFile = ({ split }: Options) => async (): Promise<void> => {
   if (!currentPath) return;
   const viewColumn = nextViewColumn(split, activeEditor);
 
-  const pathResponse = await Projection.findAlternatePath(currentPath);
+  const pathResponse = await Projection.findAlternateFile(currentPath);
 
   Result.either(
     newPath => FilePath.open(viewColumn, newPath),
@@ -34,7 +34,7 @@ export const createFile = ({ split }: Options) => async (): Promise<void> => {
   if (!currentPath) return;
   const viewColumn = nextViewColumn(split, activeEditor);
 
-  const pathResponse = await Projection.findOrCreateAlternatePath(currentPath);
+  const pathResponse = await Projection.findOrCreateAlternateFile(currentPath);
 
   Result.either(
     newPath => FilePath.open(viewColumn, newPath),

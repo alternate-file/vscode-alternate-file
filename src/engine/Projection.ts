@@ -1,4 +1,5 @@
 import * as R from "remeda";
+import * as path from "path";
 import * as AlternatePattern from "./AlternatePattern";
 
 import * as File from "./File";
@@ -13,6 +14,12 @@ export interface SourceData {
   alternate?: string | string[];
 }
 
+export interface ProjectionError {
+  message: string;
+  startingFile: string;
+  alternatesAttempted?: string[];
+}
+
 type ProjectionPair = [string, SourceData];
 type SingleProjectionPair = [string, { alternate: string }];
 
@@ -25,14 +32,28 @@ const basenameRegex = /\{\}|\{basename\}/;
  * @param userFilePath
  * @return Result.P(alternate file path, list of all attempted alternate files)
  */
-export const findAlternatePath = async (
+export const findAlternateFile = async (
   userFilePath: string
-): Result.P<string, string[]> => {
+): Result.P<string, ProjectionError> => {
+  const result = await findProjectionsFile(userFilePath);
+
+  if (!Result.isOk(result)) {
+    return Result.error({
+      message: "no result found",
+      startingFile: userFilePath
+    });
+  }
+
+  const projectionsPath = result.ok;
+  const normalizedUserFilePath = path.resolve(userFilePath);
+
   return pipeAsync(
-    userFilePath,
-    findProjections,
+    projectionsPath,
+    readProjections,
     Result.mapOk(projectionsToAlternatePatterns),
-    Result.asyncChainOk(alternatePathIfExists(userFilePath))
+    Result.asyncChainOk(
+      alternatePathIfExists(normalizedUserFilePath, projectionsPath)
+    )
   );
 };
 
@@ -41,37 +62,21 @@ export const findAlternatePath = async (
  * @param userFilePath
  * @return Result.P(alternate file path, error if no possible alternate file)
  */
-export const findOrCreateAlternatePath = async (
+export const findOrCreateAlternateFile = async (
   userFilePath: string
 ): Result.P<string, string> => {
   return pipeAsync(
     userFilePath,
-    findAlternatePath,
-    Result.asyncChainError(async (possiblePaths: string[]) => {
-      if (possiblePaths.length === 0) {
+    findAlternateFile,
+    Result.asyncChainError(async (error: ProjectionError) => {
+      const alternatesAttempted = error.alternatesAttempted || [];
+      if (alternatesAttempted.length === 0) {
         return Result.error(
           `Couldn't create an alternate file for '${userFilePath}': it didn't match any known patterns.`
         );
       }
-      return File.makeFile(possiblePaths[0]);
+      return File.makeFile(alternatesAttempted[0]);
     })
-  );
-};
-
-/**
- * Fine and parse the projections file.
- * @param userFilePath
- * @returns projections data
- */
-export const findProjections = async (
-  userFilePath: string
-): Result.P<t, any> => {
-  return pipeAsync(
-    userFilePath,
-    File.findFile(projectionsFilename),
-    Result.asyncChainOk(File.readFile),
-    Result.mapOk((data: string): string => (data === "" ? "{}" : data)),
-    Result.chainOk((x: string) => File.parseJson<t>(x))
   );
 };
 
@@ -89,6 +94,23 @@ export const projectionsToAlternatePatterns = (
 };
 
 export const create = () => {};
+
+const findProjectionsFile = async (userFilePath: string) =>
+  File.findFile(projectionsFilename)(userFilePath);
+
+/**
+ * Read and parse the projections file.
+ * @param userFilePath
+ * @returns projections data
+ */
+const readProjections = async (projectionsPath: string): Result.P<t, any> => {
+  return pipeAsync(
+    projectionsPath,
+    File.readFile,
+    Result.mapOk((data: string): string => (data === "" ? "{}" : data)),
+    Result.chainOk((x: string) => File.parseJson<t>(x))
+  );
+};
 
 const splitOutAlternates = (pair: ProjectionPair): SingleProjectionPair[] => {
   const [main, { alternate }] = pair;
@@ -108,15 +130,16 @@ const splitOutAlternates = (pair: ProjectionPair): SingleProjectionPair[] => {
 
 /**
  * Go from alternate patterns to an alternate file path (if the file exists).
- * @param path - A file path to find an alternate file for.
+ * @param userFilePath - A file path to find an alternate file for.
  * @param patterns - Alternate Patterns from a projections file.
  */
-const alternatePathIfExists = (path: string) => async (
-  patterns: AlternatePattern.t[]
-): Result.P<string, string[]> => {
+const alternatePathIfExists = (
+  userFilePath: string,
+  projectionsPath: string
+) => async (patterns: AlternatePattern.t[]): Result.P<string, string[]> => {
   return R.pipe(
     patterns,
-    R.map(AlternatePattern.alternatePath(path)),
+    R.map(AlternatePattern.alternatePath(userFilePath, projectionsPath)),
     paths => R.compact(paths) as string[],
     File.findExisting
   );
