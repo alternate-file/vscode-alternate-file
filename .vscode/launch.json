@@ -23,7 +23,8 @@
       "request": "launch",
       "runtimeExecutable": "${execPath}",
       "args": [
-        "./test-project",
+        "${workspaceFolder}/test-project",
+        "--disable-extensions",
         "--extensionDevelopmentPath=${workspaceFolder}",
         "--extensionTestsPath=${workspaceFolder}/out/test"
       ],
