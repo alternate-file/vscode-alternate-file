@@ -114,12 +114,18 @@ const findProjectionsFile = async (userFilePath: string) =>
  * @param userFilePath
  * @returns projections data
  */
-const readProjections = async (projectionsPath: string): Result.P<t, any> => {
+const readProjections = async (
+  projectionsPath: string
+): Result.P<t, AlternateFileNotFoundError.t> => {
   return pipeAsync(
     projectionsPath,
     File.readFile,
     Result.mapOk((data: string): string => (data === "" ? "{}" : data)),
-    Result.chainOk((x: string) => File.parseJson<t>(x))
+    Result.chainOk((x: string) => File.parseJson<t>(x)),
+    Result.mapError((error: string) => ({
+      startingFile: projectionsPath,
+      message: error
+    }))
   );
 };
 
@@ -147,12 +153,19 @@ const splitOutAlternates = (pair: ProjectionPair): SingleProjectionPair[] => {
 const alternatePathIfExists = (
   userFilePath: string,
   projectionsPath: string
-) => async (patterns: AlternatePattern.t[]): Result.P<string, string[]> => {
-  return R.pipe(
+) => (
+  patterns: AlternatePattern.t[]
+): Result.P<string, AlternateFileNotFoundError.t> => {
+  return pipeAsync(
     patterns,
     R.map(AlternatePattern.alternatePath(userFilePath, projectionsPath)),
     paths => R.compact(paths) as string[],
-    File.findExisting
+    File.findExisting,
+    Result.mapError((alternatesAttempted: string[]) => ({
+      alternatesAttempted,
+      message: "",
+      startingFile: userFilePath
+    }))
   );
 };
 

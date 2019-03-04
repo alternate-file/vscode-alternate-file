@@ -126,7 +126,8 @@ export const asyncChainOk = <OkData, ErrorMessage, OkOutput, ErrorOutput>(
 };
 
 /**
- * Edits a value that's wrapped in an {error: data}
+ * Replaces a value that's wrapped in an {ok: data}
+ * Useful if you don't care about the data, just the fact that previous call succeeded.
  *
  * Takes a Result and a mapping function.
  * If the result is an Error, applies the function to the message.
@@ -136,14 +137,14 @@ export const asyncChainOk = <OkData, ErrorMessage, OkOutput, ErrorOutput>(
  * @param f - the function to run on the ok data
  * @param result - The result to match against
  */
-export const replaceError = <OkData, ErrorMessage, ErrorOutput>(
-  newError: ErrorOutput
-) => (result: Result<OkData, ErrorMessage>): Result<OkData, ErrorOutput> => {
-  if (isOk(result)) {
+export const replaceOk = <OkData, ErrorMessage, OkOutput>(
+  newData: OkOutput
+) => (result: Result<OkData, ErrorMessage>): Result<OkOutput, ErrorMessage> => {
+  if (isError(result)) {
     return result;
   }
 
-  return error(newError);
+  return ok(newData);
 };
 
 /**
@@ -211,6 +212,28 @@ export const asyncChainError = <OkData, ErrorMessage, OkOutput, ErrorOutput>(
   }
 
   return f(result.error);
+};
+
+/**
+ * Replaces a value that's wrapped in an {error: data}
+ * Useful if you don't care about the data, just the fact that previous call failed.
+ *
+ * Takes a Result and a mapping function.
+ * If the result is an Error, applies the function to the message.
+ * If the result is an Ok, passes the Result through unchanged.
+ *
+ * It wraps the return value in an {error: new_message}.
+ * @param f - the function to run on the ok data
+ * @param result - The result to match against
+ */
+export const replaceError = <OkData, ErrorMessage, ErrorOutput>(
+  newError: ErrorOutput
+) => (result: Result<OkData, ErrorMessage>): Result<OkData, ErrorOutput> => {
+  if (isOk(result)) {
+    return result;
+  }
+
+  return error(newError);
 };
 
 /**

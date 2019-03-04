@@ -43,6 +43,20 @@ export const makeFile = async (
 };
 
 /**
+ * Delete a file by path
+ * @param filePath
+ * @returns Result.P<the deleted file, an error message>
+ */
+export const deleteFile = (filePath: string): Result.P<string, string> => {
+  return pipeAsync(
+    filePath,
+    unlink,
+    Result.replaceOk(filePath),
+    Result.replaceError(`can't delete ${filePath}`)
+  );
+};
+
+/**
  * Check if any of the provided files exists.
  * @param filePaths
  * @returns Ok(filePath) | Error(null)
@@ -92,5 +106,6 @@ const fileExists = async (filePath: t): Result.P<t, null> => {
 
 const writeFile = Result.resultify(promisify(fs.writeFile));
 const access = Result.resultify(promisify(fs.access));
+const unlink = Result.resultify(promisify(fs.unlink));
 
 const always = <T>(x: T) => (...args: any[]) => x;

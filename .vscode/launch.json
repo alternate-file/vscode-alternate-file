@@ -12,6 +12,7 @@
       "runtimeExecutable": "${execPath}",
       "args": [
         "${workspaceFolder}/test-project",
+        "--disable-extensions",
         "--extensionDevelopmentPath=${workspaceFolder}"
       ],
       "outFiles": ["${workspaceFolder}/out/**/*.js"],
