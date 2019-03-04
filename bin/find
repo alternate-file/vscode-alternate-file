@@ -1,0 +1,15 @@
+#!/usr/bin/env node
+
+const Projection = require("../out/engine/Projection");
+const Result = require("../out/result/Result");
+const { log } = require("../out/utils");
+
+const main = async () => {
+  const fromFile = process.argv[2];
+
+  const result = await Projection.findAlternatePath(fromFile);
+
+  Result.either(console.log, console.error, result);
+};
+
+main();

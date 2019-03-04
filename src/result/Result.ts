@@ -8,9 +8,9 @@ import { curry } from "ramda";
 /**
  * Represents the result of an operation that could succeed or fail.
  */
-export type R<OkData, ErrorMessage> = Ok<OkData> | Error<ErrorMessage>;
+export type Result<OkData, ErrorMessage> = Ok<OkData> | Error<ErrorMessage>;
 
-export type P<OkData, ErrorMessage> = Promise<R<OkData, ErrorMessage>>;
+export type P<OkData, ErrorMessage> = Promise<Result<OkData, ErrorMessage>>;
 
 /**
  * Represents the result of a successful operation.
@@ -30,22 +30,23 @@ export interface Error<Message> {
  * Type guard to check if a Result is Ok
  * @param result - The result to check
  */
-export const isOk = (result: R<any, any>): result is Ok<any> =>
+export const isOk = (result: Result<any, any>): result is Ok<any> =>
   (result as Ok<any>).ok !== undefined;
 
 /**
  * Type guard to check if a Result is an Error
  * @param result - The result to check
  */
-export const isError = (result: R<any, any>): result is Error<any> =>
+export const isError = (result: Result<any, any>): result is Error<any> =>
   (result as Error<any>).error !== undefined;
 
 /**
  * Type guard to check if an object is a Result.
  * @param result - The object to check
  */
-export const isResult = (result: R<any, any> | any): result is R<any, any> =>
-  isOk(result) || isError(result);
+export const isResult = (
+  result: Result<any, any> | any
+): result is Result<any, any> => isOk(result) || isError(result);
 
 /**
  * Wraps data in an Ok.
@@ -72,7 +73,7 @@ export const error = <T>(message: T): Error<T> => ({ error: message });
  */
 export const mapOk = <OkData, ErrorMessage, OkOutput>(
   f: (ok: OkData) => OkOutput
-) => (result: R<OkData, ErrorMessage>): R<OkOutput, ErrorMessage> => {
+) => (result: Result<OkData, ErrorMessage>): Result<OkOutput, ErrorMessage> => {
   if (isError(result)) {
     return result;
   }
@@ -92,10 +93,10 @@ export const mapOk = <OkData, ErrorMessage, OkOutput>(
  * @returns - The Result from function f or the Error
  */
 export const chainOk = <OkData, ErrorMessage, OkOutput, ErrorOutput>(
-  f: (ok: OkData) => R<OkOutput, ErrorOutput>
+  f: (ok: OkData) => Result<OkOutput, ErrorOutput>
 ) => (
-  result: R<OkData, ErrorMessage>
-): R<OkOutput, ErrorMessage | ErrorOutput> => {
+  result: Result<OkData, ErrorMessage>
+): Result<OkOutput, ErrorMessage | ErrorOutput> => {
   if (isError(result)) {
     return result;
   }
@@ -117,7 +118,7 @@ export const chainOk = <OkData, ErrorMessage, OkOutput, ErrorOutput>(
 export const asyncChainOk = <OkData, ErrorMessage, OkOutput, ErrorOutput>(
   f: (ok: OkData) => P<OkOutput, ErrorOutput>
 ) => async (
-  result: R<OkData, ErrorMessage>
+  result: Result<OkData, ErrorMessage>
 ): P<OkOutput, ErrorMessage | ErrorOutput> => {
   if (isError(result)) {
     return result;
@@ -137,9 +138,30 @@ export const asyncChainOk = <OkData, ErrorMessage, OkOutput, ErrorOutput>(
  * @param f - the function to run on the ok data
  * @param result - The result to match against
  */
+export const replaceError = <OkData, ErrorMessage, ErrorOutput>(
+  newError: ErrorOutput
+) => (result: Result<OkData, ErrorMessage>): Result<OkData, ErrorOutput> => {
+  if (isOk(result)) {
+    return result;
+  }
+
+  return error(newError);
+};
+
+/**
+ * Edits a value that's wrapped in an {error: data}
+ *
+ * Takes a Result and a mapping function.
+ * If the result is an Error, applies the function to the message.
+ * If the result is an Ok, passes the Result through unchanged.
+ *
+ * It wraps the return value in an {error: new_message}.
+ * @param f - the function to run on the ok data
+ * @param result - The result to match against
+ */
 export const mapError = <OkData, ErrorMessage, ErrorOutput>(
   f: (error: ErrorMessage) => ErrorOutput
-) => (result: R<OkData, ErrorMessage>): R<OkData, ErrorOutput> => {
+) => (result: Result<OkData, ErrorMessage>): Result<OkData, ErrorOutput> => {
   if (isOk(result)) {
     return result;
   }
@@ -159,8 +181,10 @@ export const mapError = <OkData, ErrorMessage, ErrorOutput>(
  * @returns - The Result from function f or the Ok result
  */
 export const chainError = <OkData, ErrorMessage, OkOutput, ErrorOutput>(
-  f: (ok: ErrorMessage) => R<OkOutput, ErrorOutput>
-) => (result: R<OkData, ErrorMessage>): R<OkData | OkOutput, ErrorOutput> => {
+  f: (ok: ErrorMessage) => Result<OkOutput, ErrorOutput>
+) => (
+  result: Result<OkData, ErrorMessage>
+): Result<OkData | OkOutput, ErrorOutput> => {
   if (isOk(result)) {
     return result;
   }
@@ -182,7 +206,7 @@ export const chainError = <OkData, ErrorMessage, OkOutput, ErrorOutput>(
 export const asyncChainError = <OkData, ErrorMessage, OkOutput, ErrorOutput>(
   f: (ok: ErrorMessage) => P<OkOutput, ErrorOutput>
 ) => async (
-  result: R<OkData, ErrorMessage>
+  result: Result<OkData, ErrorMessage>
 ): P<OkData | OkOutput, ErrorOutput> => {
   if (isOk(result)) {
     return result;
@@ -201,7 +225,7 @@ export const asyncChainError = <OkData, ErrorMessage, OkOutput, ErrorOutput>(
 export const either = <OkData, ErrorMessage, OkOutput, ErrorOutput>(
   ifOk: (ok: OkData) => OkOutput,
   ifError: (error: ErrorMessage) => ErrorOutput,
-  result: R<OkData, ErrorMessage>
+  result: Result<OkData, ErrorMessage>
 ): OkOutput | ErrorOutput => {
   if (isOk(result)) {
     return ifOk(result.ok);
@@ -219,8 +243,12 @@ export const pipedEither = curry(either);
  * @param result
  * @returns true if Ok, false if Error
  */
-export const toBoolean = (result: R<any, any>): boolean =>
+export const toBoolean = (result: Result<any, any>): boolean =>
   either(() => true, () => false, result);
+
+export const firstOk = <OkData>(
+  results: Result<OkData, any>[]
+): Result<OkData, null> => results.find(isOk) || error(null);
 
 /**
  * Awaits a promise, and returns a result based on the outcome

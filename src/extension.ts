@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
 import * as FindAlternate from "./FindAlternate";
-import * as Projection from "./Projection";
 
 const errorMessagePrefix = "Failed to parse .projections.json";
 
@@ -29,25 +28,22 @@ const registerCommands = (context: vscode.ExtensionContext) => async () => {
   deregisterCommands();
 
   try {
-    const projections = await Projection.findProjections();
-    const patterns = Projection.projectionsToAlternatePatterns(projections);
-
     commands = [
       vscode.commands.registerCommand(
         "alternate.alternateFile",
-        FindAlternate.openFile(patterns, { split: false })
+        FindAlternate.openFile({ split: false })
       ),
       vscode.commands.registerCommand(
         "alternate.alternateFileInSplit",
-        FindAlternate.openFile(patterns, { split: true })
+        FindAlternate.openFile({ split: true })
       ),
       vscode.commands.registerCommand(
         "alternate.createAlternateFile",
-        FindAlternate.createFile(patterns, { split: false })
+        FindAlternate.createFile({ split: false })
       ),
       vscode.commands.registerCommand(
         "alternate.createAlternateFileInSplit",
-        FindAlternate.createFile(patterns, { split: true })
+        FindAlternate.createFile({ split: true })
       )
     ];
 

@@ -1,8 +1,8 @@
 import * as assert from "assert";
 
-import * as AlternatePattern from "../AlternatePattern";
+import * as AlternatePattern from "../engine/AlternatePattern";
 
-suite("AlternatePattern", () => {
+describe("AlternatePattern", () => {
   const patterns: AlternatePattern.t[] = [
     {
       main: "src/{dirname}/{basename}.ts",
@@ -14,7 +14,7 @@ suite("AlternatePattern", () => {
     }
   ];
 
-  test("alternatePath finds implementations", () => {
+  it("alternatePath finds implementations", () => {
     assert.equal(
       AlternatePattern.alternatePath("app/controllers/foo_controller.rb")(
         patterns[1]
@@ -23,21 +23,21 @@ suite("AlternatePattern", () => {
     );
   });
 
-  test("alternatePath finds alternate for short path", () => {
+  it("alternatePath finds alternate for short path", () => {
     assert.equal(
       AlternatePattern.alternatePath("app/foo.rb")(patterns[1]),
       "test/foo_spec.rb"
     );
   });
 
-  test("alternatePath finds ts specs", () => {
+  it("alternatePath finds ts specs", () => {
     assert.equal(
       AlternatePattern.alternatePath("src/foo/bar.ts")(patterns[0]),
       "src/foo/__test__/bar.test.ts"
     );
   });
 
-  test("returns null for non-matches", () => {
+  it("returns null for non-matches", () => {
     assert.equal(
       AlternatePattern.alternatePath("src/foo.rb")(patterns[0]),
       null

@@ -1,5 +1,3 @@
-import { reduce } from "remeda";
-
 export const cons = <T>(x: T, xs: T[]): T[] => [x].concat(xs);
 
 export const contains = <T>(x: T, xs: T[]): boolean => xs.indexOf(x) !== -1;
@@ -51,3 +49,9 @@ export const compact = <T>(xs: (T | null)[]): T[] => xs.filter(exists) as T[];
 
 export const flatten = <T>(xss: T[][]): T[] =>
   ([] as T[]).concat.apply([], xss);
+
+export const log = (...args: any[]) => <T>(data: T): T => {
+  const logArgs = args.concat([data]);
+  console.log(...logArgs);
+  return data;
+};

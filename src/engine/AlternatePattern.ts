@@ -2,7 +2,6 @@ export interface t {
   main: string;
   alternate: string;
 }
-import * as FilePath from "./FilePath";
 
 const dirnameRegex = /\{dirname\}\//g;
 const basenameRegex = /\{basename\}/g;
@@ -10,7 +9,7 @@ const basenameRegex = /\{basename\}/g;
 export const alternatePath = (path: string) => ({
   main,
   alternate
-}: t): FilePath.t | null =>
+}: t): string | null =>
   alternatePathForSide(alternate, main, path) ||
   alternatePathForSide(main, alternate, path);
 
@@ -18,7 +17,7 @@ const alternatePathForSide = (
   pathPattern: string,
   alternatePattern: string,
   path: string
-): FilePath.t | null => {
+): string | null => {
   const regex = patternToRegex(pathPattern);
   const matches = path.match(regex);
 

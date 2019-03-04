@@ -1,13 +1,9 @@
-import * as fs from "fs";
-import { promisify } from "util";
-import * as vscode from "vscode";
 import * as R from "remeda";
 import * as AlternatePattern from "./AlternatePattern";
-import * as FilePath from "./FilePath";
 
 import * as File from "./File";
-import * as Result from "../Result";
-import { pipeAsync } from "./asyncPipe";
+import * as Result from "../result/Result";
+import { pipeAsync } from "../result/asyncPipe";
 
 export interface t {
   [sourcePattern: string]: SourceData;
@@ -24,6 +20,49 @@ const projectionsFilename = ".projections.json";
 const starRegex = /\*/;
 const basenameRegex = /\{\}|\{basename\}/;
 
+/**
+ * Find the path of the alternate file (if the alternate file actually exists)
+ * @param userFilePath
+ * @return Result.P(alternate file path, list of all attempted alternate files)
+ */
+export const findAlternatePath = async (
+  userFilePath: string
+): Result.P<string, string[]> => {
+  return pipeAsync(
+    userFilePath,
+    findProjections,
+    Result.mapOk(projectionsToAlternatePatterns),
+    Result.asyncChainOk(alternatePathIfExists(userFilePath))
+  );
+};
+
+/**
+ * Find the path of the alternate file if the alternate file actually exists, or create the file if it doesn't.
+ * @param userFilePath
+ * @return Result.P(alternate file path, error if no possible alternate file)
+ */
+export const findOrCreateAlternatePath = async (
+  userFilePath: string
+): Result.P<string, string> => {
+  return pipeAsync(
+    userFilePath,
+    findAlternatePath,
+    Result.asyncChainError(async (possiblePaths: string[]) => {
+      if (possiblePaths.length === 0) {
+        return Result.error(
+          `Couldn't create an alternate file for '${userFilePath}': it didn't match any known patterns.`
+        );
+      }
+      return File.makeFile(possiblePaths[0]);
+    })
+  );
+};
+
+/**
+ * Fine and parse the projections file.
+ * @param userFilePath
+ * @returns projections data
+ */
 export const findProjections = async (
   userFilePath: string
 ): Result.P<t, any> => {
@@ -36,25 +75,20 @@ export const findProjections = async (
   );
 };
 
+/**
+ * Parse the projections file into alternate pattern lookup objects.
+ * @param projections
+ */
 export const projectionsToAlternatePatterns = (
   projections: t
 ): AlternatePattern.t[] => {
   const pairs = R.toPairs(projections) as ProjectionPair[];
-  const allPairs = R.unnest(pairs.map(splitOutAlternates));
+  const allPairs = R.flatten(pairs.map(splitOutAlternates));
 
   return allPairs.map(projectionPairToAlternatePattern);
 };
 
-const readFileByUri = async (uri: vscode.Uri): Promise<string> => {
-  const data = await readFile(uri.fsPath);
-  return data.toString();
-};
-
 export const create = () => {};
-
-const readFile: (filename: string) => Promise<Buffer> = promisify(fs.readFile);
-
-const parseProjections: (file: string) => t = JSON.parse;
 
 const splitOutAlternates = (pair: ProjectionPair): SingleProjectionPair[] => {
   const [main, { alternate }] = pair;
@@ -70,6 +104,22 @@ const splitOutAlternates = (pair: ProjectionPair): SingleProjectionPair[] => {
   }
 
   throw new Error(`${main} is missing the alternate key`);
+};
+
+/**
+ * Go from alternate patterns to an alternate file path (if the file exists).
+ * @param path - A file path to find an alternate file for.
+ * @param patterns - Alternate Patterns from a projections file.
+ */
+const alternatePathIfExists = (path: string) => async (
+  patterns: AlternatePattern.t[]
+): Result.P<string, string[]> => {
+  return R.pipe(
+    patterns,
+    R.map(AlternatePattern.alternatePath(path)),
+    paths => R.compact(paths) as string[],
+    File.findExisting
+  );
 };
 
 const projectionPairToAlternatePattern = ([
