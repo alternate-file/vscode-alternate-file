@@ -8,3 +8,5 @@ tsconfig.json
 vsc-extension-quickstart.md
 tslint.json
 yarn.lock
+test-project
+assets

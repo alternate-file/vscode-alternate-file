@@ -13,11 +13,13 @@ All commands are under the control pane. Or, you can set up [shortcuts](#shortcu
 - `Create Alternate File` - Switch to the alternate file (if found) in the current pane. If not found, create the file.
 - `Create Split Alternate File` - Switch to the alternate file (if found) in a split pane. If not found, create the file.
 
+![Alternate File Demo](assets/vscode-alternate-file.gif)
+
 ## .projections.json
 
 To describe your project's layout, create a `.projections.json` in the root of your project.
 
-Each line should have the pattern for an implementation file as the key, and an object with the pattern for the alternate file (usually the spec file, but it can be whatever you want). Use a `*` in the main pattern and a `{}` in the alternate pattern to note the part of the path that should be the same between the two files. A `*` can stand in for an arbitraritly nested
+Each line should have the pattern for an implementation file as the key, and an object with the pattern for the alternate file (usually the spec file, but it can be whatever you want). Use a `*` in the main pattern and a `{}` in the alternate pattern to note the part of the path that should be the same between the two files. A `*` can stand in for an arbitrarily deep path.
 
 ### Split paths
 
@@ -44,7 +46,8 @@ Note that this isn't part of the original `projectionist` spec, but it's sometim
   "app/**/js/*.js": { "alternate": "test/{}/_test.js" },
   // Multiple alternatives
   // app/foo/bar/file.jsx =>
-  //   app/foo/bar/file.spec.jsx OR app/foo/bar/file.spec.js OR spec/js/foo/bar/file_spec.js
+  //   app/foo/bar/file.spec.jsx OR app/foo/bar/file.spec.js OR
+  //   spec/js/foo/bar/file_spec.js
   "app/*.jsx": { "alternate": ["app/{}.spec.jsx", "app/{}.spec.js", "spec/js/{}_spec.js"] }
 }
 ```
@@ -87,7 +90,21 @@ Unfortunately you don't seem to be able to add your own ex-commands to vscode-vi
 
 ## Contributing
 
-### Run Tests
+### Setup
+
+Clone the repository, then
+
+```bash
+npm install
+```
+
+### Run Unit Tests
+
+```bash
+npm test
+```
+
+### Run Integration Tests
 
 Click the Debug button in the sidebar and run `Extension Tests`
 
@@ -97,13 +114,17 @@ Click the Debug button in the sidebar and run `Extension`
 
 ## Roadmap
 
+- Support templates for auto-populating new files.
+- Automatically create default .projection.json files
 - Support all the transformations from Projectionist, not just `dirname` and `basename`.
-- Support the "type" attribute in `.projections.json`, and allow for switching by filetype, like "controller".
+- Support the "type" attribute in `.projections.json`, and allow for lookup by filetype, like for "controller/view/template".
 
 ## Release Notes
 
 ### master
 
+- Support finding .projections.json in places other than the workspace.
+- Refactored core logic into a node package
 - Better error messages when trying to run a command without a `.projections.json`
 
 ### 0.1.0
