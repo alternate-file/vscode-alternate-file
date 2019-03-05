@@ -10,6 +10,10 @@ describe("AlternatePattern", () => {
     {
       main: "app/{dirname}/{basename}.rb",
       alternate: "test/{dirname}/{basename}_spec.rb"
+    },
+    {
+      main: "apps/{dirname}/lib/{dirname}/{basename}.ex",
+      alternate: "apps/{dirname}/test/{dirname}/{basename}_test.exs"
     }
   ];
 
@@ -49,6 +53,15 @@ describe("AlternatePattern", () => {
           patterns[0]
         )
       ).toBe(null);
+    });
+
+    it("finds a match with multiple dirnames", () => {
+      const path = AlternatePattern.alternatePath(
+        "/project/apps/my_app/lib/accounts/user.ex",
+        projectionsPath
+      )(patterns[2]);
+
+      expect(path).toBe("/project/apps/my_app/test/accounts/user_test.exs");
     });
   });
 });

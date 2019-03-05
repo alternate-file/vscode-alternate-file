@@ -184,7 +184,7 @@ const mainPathToAlternate = (path: string): string => {
 
   const taggedPath = /\*\*/.test(path) ? path : path.replace("*", "**/*");
 
-  return taggedPath.replace("**", "{dirname}").replace("*", "{basename}");
+  return taggedPath.replace(/\*\*/g, "{dirname}").replace("*", "{basename}");
 };
 
 const alternatePathToAlternate = (path: string): string => {
