@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0]
+
 ### Added
 
 - Support finding .projections.json in places other than the workspace.
@@ -19,10 +21,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.0]
 
-- Rename "alternates" array to "alternate"
-- Better error messages
+### Added
+
 - Watch .projections.json for changes
 
+### Changed
+
+- Rename "alternates" array to "alternate"
+- Better error messages
+
 ## [0.0.1]
+
+### Added
 
 - Support switching to and creating alternative files
