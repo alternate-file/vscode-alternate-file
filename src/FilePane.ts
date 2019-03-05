@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import * as Result from "./result/Result";
 
 export type t = string;
 
@@ -10,11 +11,16 @@ export type t = string;
 export const open = async (
   viewColumn: number,
   filePath: t | null
-): Promise<vscode.TextEditor | null> => {
-  if (!filePath) return null;
+): Result.P<string, string> => {
+  if (!filePath) return Result.error("You must pass filePath to open");
 
   const fileUri = vscode.Uri.file(filePath);
-  return vscode.window.showTextDocument(fileUri, { viewColumn });
+  try {
+    await vscode.window.showTextDocument(fileUri, { viewColumn });
+    return Result.ok(filePath);
+  } catch (e) {
+    return Result.error(`Can't open ${filePath}`);
+  }
 };
 
 /**

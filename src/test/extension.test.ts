@@ -5,6 +5,10 @@ import * as assert from "assert";
 
 import * as FilePane from "../FilePane";
 import * as File from "../engine/File";
+import * as Projections from "../engine/Projections";
+import * as Result from "../result/Result";
+import * as utils from "../engine/utils";
+import { pipeAsync } from "../result/asyncPipe";
 
 const testCases = [
   {
@@ -129,7 +133,7 @@ const openAndCheck = async (
   await FilePane.open(0, startingFilePath);
 
   // Execute the command
-  await vscode.commands.executeCommand(command);
+  const result = await vscode.commands.executeCommand(command);
 
   // Get the currently open file
   const activeEditor = FilePane.getActiveEditor();
@@ -144,5 +148,9 @@ const openAndCheck = async (
   assert.equal(activeEditor.viewColumn, endingPane);
 };
 
-const absolutePath = (relativePath: string) =>
-  path.resolve(vscode.workspace.rootPath || "", relativePath);
+const absolutePath = (relativePath: string) => {
+  const workspaceFolders = vscode.workspace.workspaceFolders;
+  if (!workspaceFolders || workspaceFolders.length === 0) throw "no workspace";
+
+  return path.resolve(workspaceFolders[0].uri.fsPath, relativePath);
+};

@@ -290,6 +290,6 @@ export const fromPromise = <OkData, ErrorMessage>(
  * @param f A function that returns a promise
  * @returns a resolved Ok if the the promise resolved, a resolved Error if the promise was rejected.
  */
-export const resultify = <Args extends any[], OkData, ErrorMessage>(
+export const resultify = <OkData, ErrorMessage, Args extends any[]>(
   f: (...args: Args) => Promise<OkData>
 ) => (...args: Args): P<OkData, ErrorMessage> => fromPromise(f(...args));

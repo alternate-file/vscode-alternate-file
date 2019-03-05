@@ -3,3 +3,7 @@ export const log = (...args: any[]) => <T>(data: T): T => {
   console.log(...logArgs);
   return data;
 };
+
+export const sleep = (milliseconds: number): Promise<number> => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+};

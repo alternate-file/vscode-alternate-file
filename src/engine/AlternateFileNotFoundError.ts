@@ -6,3 +6,6 @@ export interface t {
   startingFile: string;
   alternatesAttempted?: string[];
 }
+
+export const isAlternateFileNotFoundError = (error: t | any): error is t =>
+  error.message !== undefined;
