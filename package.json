@@ -2,7 +2,7 @@
   "name": "vscode-alternate-file",
   "displayName": "Alternate File",
   "description": "Switch to and create spec files for any framework",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "will-wow",
   "repository": {
     "type": "git",
@@ -26,7 +26,10 @@
   },
   "icon": "assets/icon.png",
   "activationEvents": [
-    "workspaceContains:.projections.json"
+    "onCommand:alternate.alternateFile",
+    "onCommand:alternate.alternateFileInSplit",
+    "onCommand:alternate.createAlternateFile",
+    "onCommand:alternate.createAlternateFileInSplit"
   ],
   "main": "./out/extension",
   "contributes": {
