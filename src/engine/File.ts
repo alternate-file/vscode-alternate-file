@@ -81,11 +81,15 @@ export const readFile = (path: string): Result.P<string, any> =>
  * Wrap a JSON parse in a Result.
  * @returns Ok(body)
  */
-export const parseJson = <T>(data: string): Result.Result<T, any> => {
+export const parseJson = <T>(
+  data: string,
+  fileName?: string
+): Result.Result<T, any> => {
   try {
     return Result.ok(JSON.parse(data));
   } catch (e) {
-    return Result.error(e);
+    const message = `Couldn't parse ${fileName || "file"}: ${e.message}`;
+    return Result.error(message);
   }
 };
 

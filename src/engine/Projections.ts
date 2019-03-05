@@ -121,7 +121,7 @@ export const readProjections = async (
     projectionsPath,
     File.readFile,
     Result.mapOk((data: string): string => (data === "" ? "{}" : data)),
-    Result.chainOk((x: string) => File.parseJson<t>(x)),
+    Result.chainOk((x: string) => File.parseJson<t>(x, projectionsPath)),
     Result.mapError((error: string) => ({
       startingFile: projectionsPath,
       message: error

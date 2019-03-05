@@ -20,7 +20,7 @@ describe("AlternatePattern", () => {
     it("finds an implementation from a test", () => {
       expect(
         AlternatePattern.alternatePath(
-          "src/components/__test__/Foo.test.ts",
+          "/project/src/components/__test__/Foo.test.ts",
           projectionsPath
         )(patterns[0])
       ).toBe("/project/src/components/Foo.ts");
@@ -28,7 +28,7 @@ describe("AlternatePattern", () => {
 
     it("finds alternate for short path", () => {
       expect(
-        AlternatePattern.alternatePath("app/foo.rb", projectionsPath)(
+        AlternatePattern.alternatePath("/project/app/foo.rb", projectionsPath)(
           patterns[1]
         )
       ).toBe("/project/test/foo_spec.rb");
@@ -36,15 +36,16 @@ describe("AlternatePattern", () => {
 
     it("finds ts specs", () => {
       expect(
-        AlternatePattern.alternatePath("./src/foo/bar.ts", projectionsPath)(
-          patterns[0]
-        )
+        AlternatePattern.alternatePath(
+          "/project/src/foo/bar.ts",
+          projectionsPath
+        )(patterns[0])
       ).toBe("/project/src/foo/__test__/bar.test.ts");
     });
 
     it("returns null for non-matches", () => {
       expect(
-        AlternatePattern.alternatePath("src/foo.rb", projectionsPath)(
+        AlternatePattern.alternatePath("/project/src/foo.rb", projectionsPath)(
           patterns[0]
         )
       ).toBe(null);
