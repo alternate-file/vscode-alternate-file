@@ -144,5 +144,9 @@ const openAndCheck = async (
   assert.equal(activeEditor.viewColumn, endingPane);
 };
 
-const absolutePath = (relativePath: string) =>
-  path.resolve(vscode.workspace.rootPath || "", relativePath);
+const absolutePath = (relativePath: string) => {
+  const workspaceFolders = vscode.workspace.workspaceFolders;
+  if (!workspaceFolders || workspaceFolders.length === 0) throw "no workspace";
+
+  return path.resolve(workspaceFolders[0].uri.fsPath, relativePath);
+};

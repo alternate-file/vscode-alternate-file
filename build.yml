@@ -1,7 +1,10 @@
+variables:
+  CODE_TESTS_WORKSPACE: "./test-project"
+
 jobs:
-  - job: Windows
+  - job: macOS
     pool:
-      name: Hosted VS2017
+      name: Hosted macOS
       demands: npm
     steps:
       - task: NodeTool@0
@@ -18,11 +21,13 @@ jobs:
           command: custom
           verbose: false
           customCommand: "run compile"
+      - script: "npm run lint"
+        displayName: "Lint"
       - script: "node node_modules/vscode/bin/test"
         displayName: "Run tests"
-  - job: macOS
+  - job: Windows
     pool:
-      name: Hosted macOS
+      name: Hosted VS2017
       demands: npm
     steps:
       - task: NodeTool@0

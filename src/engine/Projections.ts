@@ -106,7 +106,7 @@ export const projectionsToAlternatePatterns = (
 
 export const create = () => {};
 
-const findProjectionsFile = async (userFilePath: string) =>
+export const findProjectionsFile = async (userFilePath: string) =>
   File.findFile(projectionsFilename)(userFilePath);
 
 /**
@@ -114,7 +114,7 @@ const findProjectionsFile = async (userFilePath: string) =>
  * @param userFilePath
  * @returns projections data
  */
-const readProjections = async (
+export const readProjections = async (
   projectionsPath: string
 ): Result.P<t, AlternateFileNotFoundError.t> => {
   return pipeAsync(
@@ -163,7 +163,7 @@ const alternatePathIfExists = (
     File.findExisting,
     Result.mapError((alternatesAttempted: string[]) => ({
       alternatesAttempted,
-      message: "",
+      message: `No alternate found for ${userFilePath}. Tried: ${alternatesAttempted}`,
       startingFile: userFilePath
     }))
   );

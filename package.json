@@ -2,7 +2,7 @@
   "name": "vscode-alternate-file",
   "displayName": "Alternate File",
   "description": "Switch to and create spec files for any framework",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "will-wow",
   "repository": {
     "type": "git",
@@ -26,7 +26,10 @@
   },
   "icon": "assets/icon.png",
   "activationEvents": [
-    "workspaceContains:.projections.json"
+    "onCommand:alternate.alternateFile",
+    "onCommand:alternate.alternateFileInSplit",
+    "onCommand:alternate.createAlternateFile",
+    "onCommand:alternate.createAlternateFileInSplit"
   ],
   "main": "./out/extension",
   "contributes": {
@@ -54,10 +57,13 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install",
-    "integration": "npm run compile && node ./node_modules/vscode/bin/test",
+    "integration": "npm run compile && CODE_TESTS_WORKSPACE=./test-project CODE_DISABLE_EXTENSIONS=true node ./node_modules/vscode/bin/test",
     "test": "jest",
+    "lint": "npm run lint-tslint && npm run lint-prettier",
+    "lint-tslint": "tslint -p . --config tslint.json",
+    "lint-prettier": "prettier --list-different \"**/*.{ts,json,yml}\"",
     "format": "npm run format-tslint && npm run format-prettier",
-    "format-tslint": "tslint -p . --config tslint.json",
+    "format-tslint": "tslint -p . --fix --config tslint.json",
     "format-prettier": "prettier --write \"**/*.{ts,json,yml}\""
   },
   "devDependencies": {

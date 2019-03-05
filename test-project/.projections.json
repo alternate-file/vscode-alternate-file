@@ -1,0 +1,25 @@
+{
+  "js/*.ts": {
+    "alternate": [
+      "js/{}.test.ts",
+      "js/{}.test.js",
+      "js/{dirname}/__test__/{basename}.test.ts",
+      "js/{dirname}/__test__/{basename}.test.js"
+    ]
+  },
+  "js/*.jsx": {
+    "alternate": [
+      "js/{}.test.js",
+      "js/{dirname}/__test__/{basename}.test.js"
+    ]
+  },
+  "js/*.js": {
+    "alternate": [
+      "js/{}.test.js",
+      "js/{dirname}/__test__/{basename}.test.js"
+    ]
+  },
+  "ruby/app/*.rb": {
+    "alternate": ["ruby/spec/{}_spec.rb"]
+  }
+}

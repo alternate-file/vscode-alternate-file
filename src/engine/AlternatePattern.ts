@@ -8,8 +8,18 @@ export interface t {
   alternate: string;
 }
 
-const dirnameRegex = /\{dirname\}\//g;
-const basenameRegex = /\{basename\}/g;
+const slash = "/";
+const backslash = "\\\\";
+const anyBackslashRegex = new RegExp(backslash, "g");
+
+const dirnameRegex = new RegExp(
+  `{dirname}(?:${slash}|${backslash}${backslash})`,
+  "g"
+);
+const basenameRegex = /{basename}/g;
+
+const dirnamePattern = `(?:(.+)[${slash}${backslash}])?`;
+const basenamePattern = `([^${slash}${backslash}]+)`;
 
 /**
  * Use an AlternatePath to find a possible alternate path for a file.
@@ -29,7 +39,6 @@ const alternatePathForSide = (
   filePath: string,
   projectionsPath: string
 ): string | null => {
-  const absoluteFilePath = combinePaths(projectionsPath, filePath);
   const absolutePattern = combinePaths(projectionsPath, pathPattern);
   const absoluteAlternatePattern = combinePaths(
     projectionsPath,
@@ -37,29 +46,30 @@ const alternatePathForSide = (
   );
 
   const regex = patternToRegex(absolutePattern);
-  const matches = absoluteFilePath.match(regex);
+  const matches = filePath.match(regex);
 
   if (!matches || !matches[2]) return null;
 
   const dirname = matches[1];
   const basename = matches[2];
 
-  return absoluteAlternatePattern
-    .replace("{dirname}/", dirname ? `${dirname}/` : "")
-    .replace("{basename}", basename);
+  return path.normalize(
+    absoluteAlternatePattern
+      .replace(dirnameRegex, dirname ? `${dirname}/` : "")
+      .replace(basenameRegex, basename)
+  );
 };
 
 const patternToRegex = (pathPattern: string): RegExp => {
   const regexPattern = pathPattern
-    .replace(dirnameRegex, "(?:(.+)/)?")
-    .replace(basenameRegex, "([^/]+)");
+    .replace(dirnameRegex, dirnamePattern)
+    .replace(basenameRegex, basenamePattern);
   return new RegExp(regexPattern);
 };
 
 const combinePaths = (projectionsPath: string, filePattern: string): string => {
   const projectionsDir = path.dirname(projectionsPath);
   const fullPath = path.resolve(projectionsDir, filePattern);
-  const normalizedPath = path.normalize(fullPath);
 
-  return normalizedPath.replace(/\\/g, "\\\\");
+  return fullPath.replace(anyBackslashRegex, backslash);
 };

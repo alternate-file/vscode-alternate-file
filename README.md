@@ -1,5 +1,7 @@
 # vscode-alternate-file
 
+[![Build Status](https://dev.azure.com/AlternateFile/VsCodeAlternateFile/_apis/build/status/alternate-file.vscode-alternate-file?branchName=master)](https://dev.azure.com/AlternateFile/VsCodeAlternateFile/_build/latest?definitionId=1&branchName=master)
+
 In Vim, you can often go to the "alternate file" for the active buffer - usually the spec file for an implementation, or vice versa - by pressing `:A`. This extension adds that functionality to VS Code.
 
 VSCode-Alternate reads a config file based on the `.projections.json` file from [Tim Pope's Projectionist](https://github.com/tpope/vim-projectionist). This lets you specify where the spec files for different types of files in your project are set up. One you add a `.projections.json` (and reload your editor), you can then jump between an implementation and spec file, and optionally create empty files if they don't exist.
@@ -13,7 +15,7 @@ All commands are under the control pane. Or, you can set up [shortcuts](#shortcu
 - `Create Alternate File` - Switch to the alternate file (if found) in the current pane. If not found, create the file.
 - `Create Split Alternate File` - Switch to the alternate file (if found) in a split pane. If not found, create the file.
 
-![Alternate File Demo](assets/vscode-alternate-file.gif)
+![Alternate File Demo](assets/screencasts/vscode-alternate-file.gif)
 
 ## .projections.json
 
@@ -118,21 +120,3 @@ Click the Debug button in the sidebar and run `Extension`
 - Automatically create default .projection.json files
 - Support all the transformations from Projectionist, not just `dirname` and `basename`.
 - Support the "type" attribute in `.projections.json`, and allow for lookup by filetype, like for "controller/view/template".
-
-## Release Notes
-
-### master
-
-- Support finding .projections.json in places other than the workspace.
-- Refactored core logic into a node package
-- Better error messages when trying to run a command without a `.projections.json`
-
-### 0.1.0
-
-- Rename "alternates" array to "alternate"
-- Better error messages
-- Watch .projections.json for changes
-
-### 0.0.1
-
-- Support switching to and creating alternative files
