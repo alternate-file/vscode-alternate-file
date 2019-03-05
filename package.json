@@ -25,6 +25,9 @@
     "alt": "./bin/cli.js"
   },
   "icon": "assets/icon.png",
+  "galleryBanner": {
+    "color": "#3771C8"
+  },
   "activationEvents": [
     "onCommand:alternate.alternateFile",
     "onCommand:alternate.alternateFileInSplit",
