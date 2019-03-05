@@ -26,6 +26,11 @@ const testCases = [
     description: "are a secondary match",
     implementation: "js/js-tested-file.ts",
     spec: "js/js-tested-file.test.js"
+  },
+  {
+    description: "have two variable directories",
+    implementation: "elixir/apps/my_app/lib/accounts/user.ex",
+    spec: "elixir/apps/my_app/test/accounts/user_test.exs"
   }
 ];
 

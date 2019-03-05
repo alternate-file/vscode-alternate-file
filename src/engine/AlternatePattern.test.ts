@@ -10,6 +10,10 @@ describe("AlternatePattern", () => {
     {
       main: "app/{dirname}/{basename}.rb",
       alternate: "test/{dirname}/{basename}_spec.rb"
+    },
+    {
+      main: "apps/{dirname}/lib/{dirname}/{basename}.ex",
+      alternate: "apps/{dirname}/test/{dirname}/{basename}_test.exs"
     }
   ];
 
@@ -20,7 +24,7 @@ describe("AlternatePattern", () => {
     it("finds an implementation from a test", () => {
       expect(
         AlternatePattern.alternatePath(
-          "src/components/__test__/Foo.test.ts",
+          "/project/src/components/__test__/Foo.test.ts",
           projectionsPath
         )(patterns[0])
       ).toBe("/project/src/components/Foo.ts");
@@ -28,7 +32,7 @@ describe("AlternatePattern", () => {
 
     it("finds alternate for short path", () => {
       expect(
-        AlternatePattern.alternatePath("app/foo.rb", projectionsPath)(
+        AlternatePattern.alternatePath("/project/app/foo.rb", projectionsPath)(
           patterns[1]
         )
       ).toBe("/project/test/foo_spec.rb");
@@ -36,18 +40,28 @@ describe("AlternatePattern", () => {
 
     it("finds ts specs", () => {
       expect(
-        AlternatePattern.alternatePath("./src/foo/bar.ts", projectionsPath)(
-          patterns[0]
-        )
+        AlternatePattern.alternatePath(
+          "/project/src/foo/bar.ts",
+          projectionsPath
+        )(patterns[0])
       ).toBe("/project/src/foo/__test__/bar.test.ts");
     });
 
     it("returns null for non-matches", () => {
       expect(
-        AlternatePattern.alternatePath("src/foo.rb", projectionsPath)(
+        AlternatePattern.alternatePath("/project/src/foo.rb", projectionsPath)(
           patterns[0]
         )
       ).toBe(null);
+    });
+
+    it("finds a match with multiple dirnames", () => {
+      const path = AlternatePattern.alternatePath(
+        "/project/apps/my_app/lib/accounts/user.ex",
+        projectionsPath
+      )(patterns[2]);
+
+      expect(path).toBe("/project/apps/my_app/test/accounts/user_test.exs");
     });
   });
 });

@@ -21,5 +21,8 @@
   },
   "ruby/app/*.rb": {
     "alternate": ["ruby/spec/{}_spec.rb"]
+  },
+  "elixir/apps/**/lib/**/*.ex": {
+    "alternate": "elixir/apps/{dirname}/test/{dirname}/{basename}_test.exs"
   }
 }

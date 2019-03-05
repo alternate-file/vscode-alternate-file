@@ -27,6 +27,14 @@ Each line should have the pattern for an implementation file as the key, and an 
 
 If your test paths have an extra directly in the middle of them, like with `app/some/path/__test__/file.test.js` with Jest, you can use `{dirname}` for the directory path and `{basename}` for the filename. You can do the same thing on the implementation side with the standard glob syntax: `**` to represent the directory path, and `*` to represent the filename, like `app/**/something/*.js`.
 
+If your paths have more than two variable parts, that can work too! You can use multiple sets of `**`/`{dirname}` pairs, which allows you to do something like:
+
+```json
+"apps/**/lib/**/*.ex": {
+  "alternate": "apps/{dirname}/test/{dirname}/{basename}_test.exs"
+}
+```
+
 ### Multiple alternates
 
 If your project is inconsistent about where specs go (it happens to the best of us), you can also pass an array to `alternate`. The extension will look for a file matching the first alternate, then the second, and so on. When you create an alternate file, it will always follow the first pattern.
@@ -119,4 +127,4 @@ Click the Debug button in the sidebar and run `Extension`
 - Support templates for auto-populating new files.
 - Automatically create default .projection.json files
 - Support all the transformations from Projectionist, not just `dirname` and `basename`.
-- Support the "type" attribute in `.projections.json`, and allow for lookup by filetype, like for "controller/view/template".
+- Support the "type" attribute in `.projections.json`, and allow for lookup by filetype, like for "`controller`/`view`/`template`".
