@@ -58,7 +58,7 @@
     "test": "jest",
     "format": "npm run format-tslint && npm run format-prettier",
     "format-tslint": "tslint -p . --config tslint.json",
-    "format-prettier": "prettier --write \"**/*.{ts,json}\""
+    "format-prettier": "prettier --write \"**/*.{ts,json,yml}\""
   },
   "devDependencies": {
     "@types/jest": "^24.0.9",
