@@ -5,10 +5,6 @@ import * as assert from "assert";
 
 import * as FilePane from "../FilePane";
 import * as File from "../engine/File";
-import * as Projections from "../engine/Projections";
-import * as Result from "../result/Result";
-import * as utils from "../engine/utils";
-import { pipeAsync } from "../result/asyncPipe";
 
 const testCases = [
   {
@@ -133,7 +129,7 @@ const openAndCheck = async (
   await FilePane.open(0, startingFilePath);
 
   // Execute the command
-  const result = await vscode.commands.executeCommand(command);
+  await vscode.commands.executeCommand(command);
 
   // Get the currently open file
   const activeEditor = FilePane.getActiveEditor();
