@@ -37,8 +37,8 @@ export const getActiveEditor = (): vscode.TextEditor | null =>
 export const getCurrentPath = (
   activeEditor: vscode.TextEditor
 ): string | null => {
-  const path = activeEditor.document.uri.path;
-  return path ? path.replace(/\\/g, "/") : null;
+  const path = activeEditor.document.uri.fsPath;
+  return path;
 };
 
 /**
