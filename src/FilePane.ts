@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import * as Result from "./result/Result";
+import { error, ok, ResultP } from "result-async";
 
 export type t = string;
 
@@ -11,15 +11,15 @@ export type t = string;
 export const open = async (
   viewColumn: number,
   filePath: t | null
-): Result.P<string, string> => {
-  if (!filePath) return Result.error("You must pass filePath to open");
+): ResultP<string, string> => {
+  if (!filePath) return error("You must pass filePath to open");
 
   const fileUri = vscode.Uri.file(filePath);
   try {
     await vscode.window.showTextDocument(fileUri, { viewColumn });
-    return Result.ok(filePath);
+    return ok(filePath);
   } catch (e) {
-    return Result.error(`Can't open ${filePath}`);
+    return error(`Can't open ${filePath}`);
   }
 };
 

@@ -3,8 +3,19 @@ import * as findUp from "find-up";
 import * as R from "remeda";
 import { promisify } from "util";
 
-import * as Result from "../result/Result";
-import { pipeAsync } from "../result/asyncPipe";
+import {
+  error,
+  firstOk,
+  mapError,
+  mapOk,
+  ok,
+  pipeAsync,
+  replaceError,
+  replaceOk,
+  resultify,
+  Result,
+  ResultP
+} from "result-async";
 
 export type t = string;
 
@@ -16,12 +27,10 @@ export type t = string;
  */
 export const findFile = (fileName: string) => async (
   fromFilePath: string
-): Result.P<string, string> => {
+): ResultP<string, string> => {
   const filePath = await findUp(fileName, { cwd: fromFilePath });
 
-  return filePath === null
-    ? Result.error("file not found")
-    : Result.ok(filePath);
+  return filePath === null ? error("file not found") : ok(filePath);
 };
 
 /**
@@ -33,26 +42,26 @@ export const findFile = (fileName: string) => async (
 export const makeFile = async (
   path: string,
   contents: string = ""
-): Result.P<string, string> => {
+): ResultP<string, string> => {
   return pipeAsync(
     path,
     path => writeFile(path, contents, { flag: "wx" }),
-    Result.mapOk(always(path)),
-    Result.mapError(always(`${path} already exists`))
+    mapOk(always(path)),
+    mapError(always(`${path} already exists`))
   );
 };
 
 /**
  * Delete a file by path
  * @param filePath
- * @returns Result.P<the deleted file, an error message>
+ * @returns ResultP<the deleted file, an error message>
  */
-export const deleteFile = (filePath: string): Result.P<string, string> => {
+export const deleteFile = (filePath: string): ResultP<string, string> => {
   return pipeAsync(
     filePath,
     unlink,
-    Result.replaceOk(filePath),
-    Result.replaceError(`can't delete ${filePath}`)
+    replaceOk(filePath),
+    replaceError(`can't delete ${filePath}`)
   );
 };
 
@@ -61,55 +70,55 @@ export const deleteFile = (filePath: string): Result.P<string, string> => {
  * @param filePaths
  * @returns Ok(filePath) | Error(null)
  */
-export const findExisting = async (filePaths: t[]): Result.P<t, string[]> => {
+export const findExisting = async (filePaths: t[]): ResultP<t, string[]> => {
   return pipeAsync(
     filePaths,
     R.map(fileExists),
     files => Promise.all(files),
-    file => Result.firstOk(file),
-    Result.mapError(always(filePaths))
+    file => firstOk(file),
+    mapError(always(filePaths))
   );
 };
 
 /**
  * Read the contents of a file.
  */
-export const readFile = (path: string): Result.P<string, any> =>
-  fsReadFile(path, "utf8") as Result.P<string, any>;
+export const readFile = (path: string): ResultP<string, any> =>
+  fsReadFile(path, "utf8") as ResultP<string, any>;
 
 /**
- * Wrap a JSON parse in a Result.
+ * Wrap a JSON parse in a
  * @returns Ok(body)
  */
 export const parseJson = <T>(
   data: string,
   fileName?: string
-): Result.Result<T, any> => {
+): Result<T, string> => {
   try {
-    return Result.ok(JSON.parse(data));
+    return ok(JSON.parse(data));
   } catch (e) {
     const message = `Couldn't parse ${fileName || "file"}: ${e.message}`;
-    return Result.error(message);
+    return error(message);
   }
 };
 
 /**
  * Read a file's contents
- * @returns a Result.P<file contents, error>
+ * @returns a ResultP<file contents, error>
  */
-export const fsReadFile = Result.resultify(promisify(fs.readFile));
+export const fsReadFile = resultify(promisify(fs.readFile));
 
-const fileExists = async (filePath: t): Result.P<t, null> => {
+const fileExists = async (filePath: t): ResultP<t, null> => {
   return pipeAsync(
     filePath,
     (filePath: string) => access(filePath, fs.constants.R_OK),
-    Result.mapOk(always(filePath)),
-    Result.mapError(always(null))
+    mapOk(always(filePath)),
+    mapError(always(null))
   );
 };
 
-const writeFile = Result.resultify(promisify(fs.writeFile));
-const access = Result.resultify(promisify(fs.access));
-const unlink = Result.resultify(promisify(fs.unlink));
+const writeFile = resultify(promisify(fs.writeFile));
+const access = resultify(promisify(fs.access));
+const unlink = resultify(promisify(fs.unlink));
 
 const always = <T>(x: T) => (...args: any[]) => x;

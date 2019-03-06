@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as utils from "./utils";
-import * as Result from "../result/Result";
+import { isError, ok, error, Result } from "result-async";
 
 /**
  * A computer-friendly representation of paths for switching between alternate files.
@@ -53,7 +53,7 @@ const alternatePathForSide = (
   );
 
   const matchResult = matchPatternToPath(absolutePattern, filePath);
-  if (Result.isError(matchResult)) return null;
+  if (isError(matchResult)) return null;
 
   const pathMatches = matchResult.ok;
   const transformations = patternToTransformations(absolutePattern);
@@ -111,15 +111,15 @@ const patternToTransformations = (pathPattern: string) => {
 const matchPatternToPath = (
   pathPattern: string,
   filePath: string
-): Result.Result<string[], null> => {
+): Result<string[], null> => {
   const regex = patternToRegex(pathPattern);
   const matches = filePath.match(regex);
 
-  if (!matches || !matches[2]) return Result.error(null);
+  if (!matches || !matches[2]) return error(null);
 
   const pathMatches = matches.slice(1);
 
-  return Result.ok(pathMatches);
+  return ok(pathMatches);
 };
 
 /**

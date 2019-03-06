@@ -4,9 +4,10 @@
   "description": "Switch to and create spec files for any framework",
   "version": "0.2.0",
   "publisher": "will-wow",
+  "author": "Will Ockelmann-Wagner",
   "repository": {
     "type": "git",
-    "url": "https://github.com/will-wow/vscode-alternate-file.git"
+    "url": "https://github.com/alternate-file/vscode-alternate-file.git"
   },
   "license": "MIT",
   "engines": {
@@ -26,7 +27,8 @@
   },
   "icon": "assets/icon.png",
   "galleryBanner": {
-    "color": "#3771C8"
+    "color": "#172F54",
+    "theme": "dark"
   },
   "activationEvents": [
     "onCommand:alternate.alternateFile",
@@ -64,10 +66,10 @@
     "test": "jest",
     "lint": "npm run lint-tslint && npm run lint-prettier",
     "lint-tslint": "tslint -p . --config tslint.json",
-    "lint-prettier": "prettier --list-different \"**/*.{ts,json,yml}\"",
+    "lint-prettier": "prettier --list-different \"**/*.{ts,json,md,yml}\"",
     "format": "npm run format-tslint && npm run format-prettier",
     "format-tslint": "tslint -p . --fix --config tslint.json",
-    "format-prettier": "prettier --write \"**/*.{ts,json,yml}\""
+    "format-prettier": "prettier --write \"**/*.{ts,json,md,yml}\""
   },
   "devDependencies": {
     "@types/jest": "^24.0.9",
@@ -85,7 +87,7 @@
     "@types/find-up": "^2.1.1",
     "@types/node": "^11.10.0",
     "find-up": "^3.0.0",
-    "remeda": "0.0.9"
-  },
-  "jest": {}
+    "remeda": "0.0.9",
+    "result-async": "0.1.0"
+  }
 }
