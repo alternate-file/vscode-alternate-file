@@ -1,4 +1,0 @@
-{
-  "lib/*.ex": { "alternate": "test/{}_test.exs" },
-  "assets/js/*.js": { "alternate": "test/js/{}_test.js" }
-}

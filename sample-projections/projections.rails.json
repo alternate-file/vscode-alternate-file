@@ -1,4 +1,0 @@
-{
-  "app/*.rb": { "alternate": "spec/{}_spec.rb" },
-  "app/assets/javascripts/*.js": { "alternate": "spec/javascripts/{}_spec.js" }
-}

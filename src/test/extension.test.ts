@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
-import * as R from "remeda";
 import * as path from "path";
 import * as assert from "assert";
+import * as fs from "fs";
+import { promisify } from "util";
 
 import * as FilePane from "../FilePane";
-import * as File from "../engine/File";
 
 const testCases = [
   {
@@ -98,11 +98,8 @@ describe("Extension Tests", () => {
 
     describe("given a creator command", () => {
       afterEach(() => {
-        return R.pipe(
-          untestedFileSpec,
-          absolutePath,
-          File.deleteFile
-        );
+        const path = absolutePath(untestedFileSpec);
+        return unlink(path);
       });
       it("creates a new alternate file", () =>
         openAndCheck(
@@ -155,3 +152,5 @@ const absolutePath = (relativePath: string) => {
 
   return path.resolve(workspaceFolders[0].uri.fsPath, relativePath);
 };
+
+const unlink = promisify(fs.unlink);

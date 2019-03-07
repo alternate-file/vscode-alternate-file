@@ -1,10 +1,12 @@
 # vscode-alternate-file
 
-[![Build Status](https://dev.azure.com/AlternateFile/VsCodeAlternateFile/_apis/build/status/alternate-file.vscode-alternate-file?branchName=master)](https://dev.azure.com/AlternateFile/VsCodeAlternateFile/_build/latest?definitionId=1&branchName=master)
+[![Build Status](https://img.shields.io/azure-devops/build/AlternateFile/17c9d9be-71eb-46c2-8af1-e017d13fb009/1/master.svg)](https://dev.azure.com/AlternateFile/VsCodeAlternateFile/_build/latest?definitionId=1&branchName=master)
+[![David Dependency Status](https://img.shields.io/david/alternate-file/vscode-alternate-file.svg)](https://david-dm.org/alternate-file/vscode-alternate-file)
+
 
 In Vim, you can often go to the "alternate file" for the active buffer - usually the spec file for an implementation, or vice versa - by pressing `:A`. This extension adds that functionality to VS Code.
 
-VSCode-Alternate reads a config file based on the `.projections.json` file from [Tim Pope's Projectionist](https://github.com/tpope/vim-projectionist). This lets you specify where the spec files for different types of files in your project are set up. One you add a `.projections.json` (and reload your editor), you can then jump between an implementation and spec file, and optionally create empty files if they don't exist.
+VSCode-Alternate-File reads a config file based on the `.projections.json` file from [Tim Pope's Projectionist](https://github.com/tpope/vim-projectionist). This lets you specify where the spec files for different types of files in your project are set up. One you add a `.projections.json` (and reload your editor), you can then jump between an implementation and spec file, and optionally create empty files if they don't exist.
 
 ## Features
 
@@ -108,15 +110,17 @@ Clone the repository, then
 npm install
 ```
 
-### Run Unit Tests
-
-```bash
-npm test
-```
+``
 
 ### Run Integration Tests
 
 Click the Debug button in the sidebar and run `Extension Tests`
+
+Or to run them in CI:
+
+```bash
+npm test
+```
 
 ### Deploy to a local VS Code
 
