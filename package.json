@@ -88,6 +88,6 @@
     "@types/node": "^11.10.0",
     "find-up": "^3.0.0",
     "remeda": "0.0.9",
-    "result-async": "0.1.0"
+    "result-async": "0.1.1"
   }
 }
