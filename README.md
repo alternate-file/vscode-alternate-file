@@ -1,8 +1,8 @@
 # vscode-alternate-file
 
+[![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/will-wow.vscode-alternate-file.svg)](https://marketplace.visualstudio.com/items?itemName=will-wow.vscode-alternate-file)
 [![Build Status](https://img.shields.io/azure-devops/build/AlternateFile/17c9d9be-71eb-46c2-8af1-e017d13fb009/1/master.svg)](https://dev.azure.com/AlternateFile/VsCodeAlternateFile/_build/latest?definitionId=1&branchName=master)
 [![David Dependency Status](https://img.shields.io/david/alternate-file/vscode-alternate-file.svg)](https://david-dm.org/alternate-file/vscode-alternate-file)
-
 
 In Vim, you can often go to the "alternate file" for the active buffer - usually the spec file for an implementation, or vice versa - by pressing `:A`. This extension adds that functionality to VS Code.
 
@@ -87,7 +87,7 @@ alternate.createAlternateFile
 alternate.createAlternateFileInSplit
 ```
 
-### Vim support
+### VSCode-Vim support
 
 If you use [vscode-vim](https://github.com/VSCodeVim/Vim), it might be easier to add a leader-key shortcut, like the alternate file command from [Spacemacs](https://github.com/syl20bnr/spacemacs/blob/master/doc/DOCUMENTATION.org#managing-projects)
 
@@ -102,6 +102,10 @@ Unfortunately you don't seem to be able to add your own ex-commands to vscode-vi
 
 ## Contributing
 
+The core logic is implemented in [alternate-file](https://github.com/alternate-file/alternate-file). Any changes to the matching and finding logic should go there.
+
+To run a
+
 ### Setup
 
 Clone the repository, then
@@ -109,8 +113,6 @@ Clone the repository, then
 ```bash
 npm install
 ```
-
-``
 
 ### Run Integration Tests
 
@@ -125,6 +127,15 @@ npm test
 ### Deploy to a local VS Code
 
 Click the Debug button in the sidebar and run `Extension`
+
+### Build local package
+
+vsce package
+
+### Deploy
+
+npm version major|minor|patch
+vsce publish
 
 ## Roadmap
 
