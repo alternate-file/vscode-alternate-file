@@ -5,15 +5,15 @@ import {
   isError,
   pipeAsync,
   okSideEffect,
-  errorSideEffect
+  errorSideEffect,
+  asyncChainOk
 } from "result-async";
 import * as FilePane from "./FilePane";
 
 export async function initializeProjectionsHere() {
-  const editor = FilePane.getActiveEditor();
   const workspace = FilePane.getActiveWorkspace();
 
-  if (isError(workspace) || !editor) {
+  if (isError(workspace)) {
     vscode.window.showErrorMessage(
       "You must open a file to initialize a .projections.json file"
     );
@@ -35,13 +35,14 @@ export async function initializeProjectionsHere() {
 
   const workspaceRootPath = workspace.ok.uri.fsPath;
 
+  const editor = FilePane.getActiveEditor();
   const nextColumn = FilePane.nextViewColumn(true, editor);
 
   return pipeAsync(
     initializeProjections(workspaceRootPath, framework.value),
-    okSideEffect(projectionsPath => {
+    asyncChainOk(projectionsPath => {
       vscode.window.showInformationMessage(`Created ${projectionsPath}`);
-      FilePane.open(nextColumn, projectionsPath);
+      return FilePane.open(nextColumn, projectionsPath);
     }),
     errorSideEffect(vscode.window.showErrorMessage)
   );

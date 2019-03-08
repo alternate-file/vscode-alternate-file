@@ -47,8 +47,9 @@ export const getCurrentPath = (
  */
 export const nextViewColumn = (
   split: boolean,
-  activeEditor: vscode.TextEditor
+  activeEditor: vscode.TextEditor | null
 ): number => {
+  if (!activeEditor) return 0;
   if (!activeEditor.viewColumn) return 0;
   if (!split) return -1;
   return activeEditor.viewColumn + 1;
@@ -61,9 +62,11 @@ export const nextViewColumn = (
 export function getActiveWorkspace(): Result<vscode.WorkspaceFolder, null> {
   const editor = getActiveEditor();
 
-  if (!editor) return error(null);
-
-  const workspace = vscode.workspace.getWorkspaceFolder(editor.document.uri);
+  const workspace = editor
+    ? vscode.workspace.getWorkspaceFolder(editor.document.uri)
+    : vscode.workspace.workspaceFolders
+    ? vscode.workspace.workspaceFolders[0]
+    : undefined;
 
   if (!workspace) return error(null);
 
