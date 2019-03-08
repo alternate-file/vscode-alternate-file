@@ -43,6 +43,7 @@
     "theme": "dark"
   },
   "activationEvents": [
+    "onCommand:alternate.initProjections",
     "onCommand:alternate.alternateFile",
     "onCommand:alternate.alternateFileInSplit",
     "onCommand:alternate.createAlternateFile",
@@ -52,12 +53,16 @@
   "contributes": {
     "commands": [
       {
+        "command": "alternate.initProjections",
+        "title": "Initialize Projections File"
+      },
+      {
         "command": "alternate.alternateFile",
         "title": "Alternate File"
       },
       {
         "command": "alternate.alternateFileInSplit",
-        "title": "Split Alternate File"
+        "title": "Alternate File in Split"
       },
       {
         "command": "alternate.createAlternateFile",
@@ -65,7 +70,7 @@
       },
       {
         "command": "alternate.createAlternateFileInSplit",
-        "title": "Create Split Alternate File"
+        "title": "Create Alternate File in Split"
       }
     ]
   },
@@ -95,7 +100,7 @@
   },
   "dependencies": {
     "@types/node": "^11.10.0",
-    "alternate-file": "^0.2.2",
-    "result-async": "^1.0.0"
+    "alternate-file": "file:../alternate-file",
+    "result-async": "file:../result-async"
   }
 }
