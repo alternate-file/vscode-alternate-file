@@ -4,7 +4,6 @@ import {
   assertOk,
   isError,
   pipeAsync,
-  okSideEffect,
   errorSideEffect,
   asyncChainOk
 } from "result-async";
