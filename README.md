@@ -12,6 +12,7 @@ VSCode-Alternate-File reads a config file based on the `.projections.json` file 
 
 All commands are under the control pane. Or, you can set up [shortcuts](#shortcuts).
 
+- `Initialize Projections File` - Create a new `.projections.json` in the root of the current workspace. You can pass in the name of some frameworks to get reasonable projection defaults.
 - `Alternate File` - Switch to the alternate file (if found) in the current pane
 - `Split Alternate File` - Switch to the alternate file (if found) in a split pane
 - `Create Alternate File` - Switch to the alternate file (if found) in the current pane. If not found, create the file.
@@ -64,7 +65,7 @@ Note that this isn't part of the original `projectionist` spec, but it's sometim
 }
 ```
 
-For `.projections.json` files for popular frameworks, see the [sample-projections](/sample-projections). If your framework isn't in there, PRs for new sample-projections are welcome!
+For `.projections.json` files for popular frameworks, see the [sample-projections](https://github.com/alternate-file/alternate-file/tree/master/sample-projections). If your framework isn't in there, PRs for new sample-projections are welcome!
 
 ## Shortcuts
 

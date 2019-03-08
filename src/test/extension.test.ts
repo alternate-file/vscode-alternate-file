@@ -6,7 +6,6 @@ import * as sinon from "sinon";
 import { promisify } from "util";
 
 import * as FilePane from "../FilePane";
-import { initializeProjections } from "alternate-file";
 
 const testCases = [
   {
