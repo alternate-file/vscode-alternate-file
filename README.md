@@ -93,8 +93,16 @@ If you use [vscode-vim](https://github.com/VSCodeVim/Vim), it might be easier to
 
 ```json
 {
-  "before": ["<leader>", "p", "a"],
-  "commands": [{ "command": "alternate.alternateFile" }]
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<leader>", "p", "a"],
+      "commands": [{ "command": "alternate.alternateFile" }]
+    },
+    {
+      "before": ["<leader>", "p", "s"],
+      "commands": [{ "command": "alternate.alternateFileInSplit" }]
+    }
+  ]
 }
 ```
 
