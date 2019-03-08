@@ -90,8 +90,11 @@
   },
   "devDependencies": {
     "@types/mocha": "^5.2.6",
+    "@types/sinon": "^7.0.9",
     "chai": "^4.2.0",
+    "chai-spies": "^1.0.0",
     "prettier": "^1.16.4",
+    "sinon": "^7.2.7",
     "tslint": "^5.13.1",
     "tslint-config-airbnb": "^5.11.1",
     "tslint-config-prettier": "^1.18.0",
