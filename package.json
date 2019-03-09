@@ -103,7 +103,7 @@
   },
   "dependencies": {
     "@types/node": "^11.10.0",
-    "alternate-file": "^0.2.3",
+    "alternate-file": "^0.2.4",
     "result-async": "^1.1.0"
   }
 }
