@@ -2,7 +2,7 @@
   "name": "vscode-alternate-file",
   "displayName": "Alternate File",
   "description": "Switch to and create spec files for any framework",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "publisher": "will-wow",
   "author": "Will Ockelmann-Wagner",
   "repository": {
