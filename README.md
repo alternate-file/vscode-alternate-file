@@ -14,9 +14,9 @@ All commands are under the control pane. Or, you can set up [shortcuts](#shortcu
 
 - `Initialize Projections File` - Create a new `.projections.json` in the root of the current workspace. You can pass in the name of some frameworks to get reasonable projection defaults.
 - `Alternate File` - Switch to the alternate file (if found) in the current pane
-- `Split Alternate File` - Switch to the alternate file (if found) in a split pane
+- `Alternate File in Split` - Switch to the alternate file (if found) in a split pane
 - `Create Alternate File` - Switch to the alternate file (if found) in the current pane. If not found, create the file.
-- `Create Split Alternate File` - Switch to the alternate file (if found) in a split pane. If not found, create the file.
+- `Create Alternate File in Split` - Switch to the alternate file (if found) in a split pane. If not found, create the file.
 
 ![Alternate File Demo](assets/screencasts/vscode-alternate-file.gif)
 

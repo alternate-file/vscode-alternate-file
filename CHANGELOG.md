@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0]
+
+## Added
+
+- `Initialize Projections File` command
+
+## Changed
+
+- Renamed `Split Alternate File` to `Alternate File in Split` for easier Command Pallet searching
+- Split engine into NPM lib for easier extension
+
 ## [0.2.0]
 
 ### Added
