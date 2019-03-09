@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import * as path from "path";
 import * as assert from "assert";
 import * as fs from "fs";
+import * as sinon from "sinon";
 import { promisify } from "util";
 
 import * as FilePane from "../FilePane";
@@ -116,6 +117,56 @@ describe("Extension Tests", () => {
           untestedFile,
           untestedFileSpec
         ));
+    });
+  });
+
+  describe("initProjections", async () => {
+    let showInformationMessageSpy: sinon.SinonSpy;
+    let showErrorMessageSpy: sinon.SinonSpy;
+
+    beforeEach(() => {
+      showInformationMessageSpy = sinon.fake();
+      showErrorMessageSpy = sinon.fake();
+
+      sinon.replace(
+        vscode.window,
+        "showInformationMessage",
+        showInformationMessageSpy
+      );
+      sinon.replace(vscode.window, "showErrorMessage", showErrorMessageSpy);
+    });
+
+    describe("given the user will pick 'react'", () => {
+      let showQuickPickSpy: sinon.SinonSpy<any, any>;
+
+      beforeEach(() => {
+        showQuickPickSpy = sinon.fake.returns(
+          Promise.resolve({ value: "react" })
+        );
+        sinon.replace(vscode.window, "showQuickPick", showQuickPickSpy);
+      });
+
+      afterEach(() => {
+        sinon.restore();
+      });
+
+      it("creates a new file", async () => {
+        const startingPath = absolutePath("js/simple-file.test.js");
+
+        await FilePane.open(0, startingPath);
+
+        await vscode.commands.executeCommand("alternate.initProjections");
+        const editor = FilePane.getActiveEditor();
+
+        if (!editor) throw "no active editor";
+
+        assert(!showInformationMessageSpy.called);
+        assert(
+          showErrorMessageSpy.getCall(0).args[0].includes("already exists")
+        );
+
+        assert.equal(editor.document.uri.fsPath, startingPath);
+      });
     });
   });
 });

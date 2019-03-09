@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { error, ok, ResultP } from "result-async";
+import { error, ok, Result, ResultP } from "result-async";
 
 export type t = string;
 
@@ -47,9 +47,28 @@ export const getCurrentPath = (
  */
 export const nextViewColumn = (
   split: boolean,
-  activeEditor: vscode.TextEditor
+  activeEditor: vscode.TextEditor | null
 ): number => {
+  if (!activeEditor) return 0;
   if (!activeEditor.viewColumn) return 0;
   if (!split) return -1;
   return activeEditor.viewColumn + 1;
 };
+
+/**
+ * Get the Workspace of the current editor.
+ * @returns Ok(Workspace), or Error(null) if there's no workspace open.
+ */
+export function getActiveWorkspace(): Result<vscode.WorkspaceFolder, null> {
+  const editor = getActiveEditor();
+
+  const workspace = editor
+    ? vscode.workspace.getWorkspaceFolder(editor.document.uri)
+    : vscode.workspace.workspaceFolders
+    ? vscode.workspace.workspaceFolders[0]
+    : undefined;
+
+  if (!workspace) return error(null);
+
+  return ok(workspace);
+}

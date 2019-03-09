@@ -43,6 +43,7 @@
     "theme": "dark"
   },
   "activationEvents": [
+    "onCommand:alternate.initProjections",
     "onCommand:alternate.alternateFile",
     "onCommand:alternate.alternateFileInSplit",
     "onCommand:alternate.createAlternateFile",
@@ -52,12 +53,16 @@
   "contributes": {
     "commands": [
       {
+        "command": "alternate.initProjections",
+        "title": "Initialize Projections File"
+      },
+      {
         "command": "alternate.alternateFile",
         "title": "Alternate File"
       },
       {
         "command": "alternate.alternateFileInSplit",
-        "title": "Split Alternate File"
+        "title": "Alternate File in Split"
       },
       {
         "command": "alternate.createAlternateFile",
@@ -65,7 +70,7 @@
       },
       {
         "command": "alternate.createAlternateFileInSplit",
-        "title": "Create Split Alternate File"
+        "title": "Create Alternate File in Split"
       }
     ]
   },
@@ -85,8 +90,11 @@
   },
   "devDependencies": {
     "@types/mocha": "^5.2.6",
+    "@types/sinon": "^7.0.9",
     "chai": "^4.2.0",
+    "chai-spies": "^1.0.0",
     "prettier": "^1.16.4",
+    "sinon": "^7.2.7",
     "tslint": "^5.13.1",
     "tslint-config-airbnb": "^5.11.1",
     "tslint-config-prettier": "^1.18.0",
@@ -95,7 +103,7 @@
   },
   "dependencies": {
     "@types/node": "^11.10.0",
-    "alternate-file": "^0.2.2",
-    "result-async": "^1.0.0"
+    "alternate-file": "^0.2.4",
+    "result-async": "^1.1.0"
   }
 }

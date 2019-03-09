@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import * as FindAlternate from "./FindAlternate";
+import { initializeProjectionsHere } from "./InitializeProjections";
 
 let commands: vscode.Disposable[] = [];
 
@@ -7,6 +8,10 @@ export const activate = async (
   context: vscode.ExtensionContext
 ): Promise<void> => {
   commands = [
+    vscode.commands.registerCommand(
+      "alternate.initProjections",
+      initializeProjectionsHere
+    ),
     vscode.commands.registerCommand(
       "alternate.alternateFile",
       FindAlternate.openFile({ split: false })

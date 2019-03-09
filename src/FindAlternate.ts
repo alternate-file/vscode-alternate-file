@@ -1,11 +1,5 @@
 import * as vscode from "vscode";
-import {
-  asyncChainOk,
-  error,
-  mapError,
-  pipeAsync,
-  ResultP
-} from "result-async";
+import { asyncChainOk, error, ifError, pipeAsync, ResultP } from "result-async";
 
 import * as FilePane from "./FilePane";
 import {
@@ -33,7 +27,7 @@ export const openFile = ({ split }: Options) => async (): ResultP<
     currentPath,
     findAlternateFile,
     asyncChainOk((newPath: string) => FilePane.open(viewColumn, newPath)),
-    mapError(logError)
+    ifError(logError)
   );
 };
 
@@ -51,7 +45,7 @@ export const createFile = ({ split }: Options) => async (): ResultP<
     currentPath,
     findOrCreateAlternateFile,
     asyncChainOk((newPath: string) => FilePane.open(viewColumn, newPath)),
-    mapError(logError)
+    ifError(logError)
   );
 };
 
