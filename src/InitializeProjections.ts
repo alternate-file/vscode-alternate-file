@@ -1,11 +1,11 @@
 import * as vscode from "vscode";
 import { initializeProjections, possibleFrameworks } from "alternate-file";
 import {
-  assertOk,
+  okOrThrow,
   isError,
   pipeAsync,
-  errorSideEffect,
-  asyncChainOk
+  errorDo,
+  okChainAsync
 } from "result-async";
 import * as FilePane from "./FilePane";
 
@@ -21,7 +21,7 @@ export async function initializeProjectionsHere() {
 
   const frameworks = await possibleFrameworks();
 
-  const names = assertOk(frameworks).map(([name, value]) => ({
+  const names = okOrThrow(frameworks).map(([name, value]) => ({
     value,
     label: name
   }));
@@ -39,10 +39,10 @@ export async function initializeProjectionsHere() {
 
   return pipeAsync(
     initializeProjections(workspaceRootPath, framework.value),
-    asyncChainOk(projectionsPath => {
+    okChainAsync(projectionsPath => {
       vscode.window.showInformationMessage(`Created ${projectionsPath}`);
       return FilePane.open(nextColumn, projectionsPath);
     }),
-    errorSideEffect(vscode.window.showErrorMessage)
+    errorDo(vscode.window.showErrorMessage)
   );
 }
