@@ -139,16 +139,20 @@ Click the Debug button in the sidebar and run `Extension`
 
 ### Build local package
 
-vsce package
+```bash
+npm i -g vsce
+vsce package --yarn
+```
 
 ### Deploy
 
+```bash
 npm version major|minor|patch
-vsce publish
+vsce publish -- yarn
+```
 
 ## Roadmap
 
 - Support templates for auto-populating new files.
-- Automatically create default .projection.json files
 - Support all the transformations from Projectionist, not just `dirname` and `basename`.
 - Support the "type" attribute in `.projections.json`, and allow for lookup by filetype, like for "`controller`/`view`/`template`".
