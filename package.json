@@ -78,7 +78,7 @@
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "postinstall": "node ./node_modules/vscode/bin/install",
+    "postinstall": "vscode-install",
     "preversion": "npm run lint",
     "test": "npm run compile && CODE_TESTS_WORKSPACE=./test-project CODE_DISABLE_EXTENSIONS=true node ./node_modules/vscode/bin/test",
     "lint": "npm run lint-tslint && npm run lint-prettier",
@@ -103,7 +103,7 @@
   },
   "dependencies": {
     "@types/node": "^11.10.0",
-    "alternate-file": "^0.2.4",
-    "result-async": "^1.1.0"
+    "alternate-file": "^0.2.5",
+    "result-async": "^1.2.1"
   }
 }
