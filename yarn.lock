@@ -80,17 +80,17 @@ ajv@^6.5.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-alternate-file@^0.2.4:
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/alternate-file/-/alternate-file-0.2.4.tgz#13c915e724d6de73e9189c190207a8dc099c58c3"
-  integrity sha512-urNiZmOyxLOf3oleX877wuhw0WfQjg+dxL2jQ1XQW7IYhtIXAochaqXz3Iz5h/5O59bC9pCflj9hkUo5trrnbQ==
+alternate-file@^0.2.5:
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/alternate-file/-/alternate-file-0.2.5.tgz#6b9012e1852e46a1a2ff833be85f7474aa722791"
+  integrity sha512-GTxUfgl5eMXv7u6vi+6Z3xoN/Y556wxs4khJvrhx1EKg+/0RNO8l8Ul/pfOuUT2l4rMGA9k32CMZW3Z1nXez2w==
   dependencies:
     "@types/find-up" "^2.1.1"
     "@types/node" "^11.10.0"
     find-up "^3.0.0"
     minimist "^1.2.0"
     remeda "0.0.9"
-    result-async "^1.1.0 ="
+    result-async "^1.2.1"
 
 ansi-cyan@^0.1.1:
   version "0.1.1"
@@ -1438,10 +1438,10 @@ resolve@^1.3.2:
   dependencies:
     path-parse "^1.0.6"
 
-result-async@^1.1.0, "result-async@^1.1.0 =":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/result-async/-/result-async-1.1.0.tgz#78d7ea7958fc68fa64303ae1e7f5e186789a7d8a"
-  integrity sha512-xr4Y3HdFvKokWHzgs63cX+OpQ2Xu0kQdVh2RVRg5gfNfZks9fJn49JDk/VZX9fUJ1TIas/m+eBDMRA5B44b9TQ==
+result-async@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/result-async/-/result-async-1.2.1.tgz#ec60932d354d837e75419a60a4f912ae0d91c880"
+  integrity sha512-sQ9ZlWLFrEYLZpzGjE1VapALiT6QM8DjJnJPXS6LwPlOPiE9tutLNSXiuIrxUc8aUhNXdBSFlZzd7II9JDq03w==
 
 rimraf@2:
   version "2.6.3"

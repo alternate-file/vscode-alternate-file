@@ -1,5 +1,11 @@
 import * as vscode from "vscode";
-import { okChainAsync, error, errorThen, pipeAsync, ResultP } from "result-async";
+import {
+  okChainAsync,
+  error,
+  errorThen,
+  pipeAsync,
+  ResultP
+} from "result-async";
 
 import * as FilePane from "./FilePane";
 import {
