@@ -1,12 +1,7 @@
 import * as vscode from "vscode";
 import { initializeProjections, possibleFrameworks } from "alternate-file";
-import {
-  okOrThrow,
-  isError,
-  pipeAsync,
-  errorDo,
-  okChainAsync
-} from "result-async";
+import { okOrThrow, isError, errorDo, okChainAsync } from "result-async";
+import { pipeA } from "pipeout";
 import * as FilePane from "./FilePane";
 
 export async function initializeProjectionsHere() {
@@ -37,12 +32,13 @@ export async function initializeProjectionsHere() {
   const editor = FilePane.getActiveEditor();
   const nextColumn = FilePane.nextViewColumn(true, editor);
 
-  return pipeAsync(
-    initializeProjections(workspaceRootPath, framework.value),
-    okChainAsync(projectionsPath => {
+  // prettier-ignore
+  return pipeA
+    (initializeProjections(workspaceRootPath, framework.value))
+    (okChainAsync(projectionsPath => {
       vscode.window.showInformationMessage(`Created ${projectionsPath}`);
       return FilePane.open(nextColumn, projectionsPath);
-    }),
-    errorDo(vscode.window.showErrorMessage)
-  );
+    }))
+    (errorDo(vscode.window.showErrorMessage))
+    .value
 }

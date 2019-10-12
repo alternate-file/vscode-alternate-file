@@ -1,11 +1,6 @@
 import * as vscode from "vscode";
-import {
-  okChainAsync,
-  error,
-  errorThen,
-  pipeAsync,
-  ResultP
-} from "result-async";
+import { okChainAsync, error, errorThen, ResultP } from "result-async";
+import { pipeA } from "pipeout";
 
 import * as FilePane from "./FilePane";
 import {
@@ -29,12 +24,13 @@ export const openFile = ({ split }: Options) => async (): ResultP<
   if (!currentPath) return error("no current path");
   const viewColumn = FilePane.nextViewColumn(split, activeEditor);
 
-  return pipeAsync(
-    currentPath,
-    findAlternateFile,
-    okChainAsync((newPath: string) => FilePane.open(viewColumn, newPath)),
-    errorThen(logError)
-  );
+  // prettier-ignore
+  return pipeA
+    (currentPath)
+    (findAlternateFile)
+    (okChainAsync((newPath: string) => FilePane.open(viewColumn, newPath)))
+    (errorThen(logError))
+    .value
 };
 
 export const createFile = ({ split }: Options) => async (): ResultP<
@@ -47,12 +43,13 @@ export const createFile = ({ split }: Options) => async (): ResultP<
   if (!currentPath) return error("no current path");
   const viewColumn = FilePane.nextViewColumn(split, activeEditor);
 
-  return pipeAsync(
-    currentPath,
-    findOrCreateAlternateFile,
-    okChainAsync((newPath: string) => FilePane.open(viewColumn, newPath)),
-    errorThen(logError)
-  );
+  // prettier-ignore
+  return pipeA
+    (currentPath)
+    (findOrCreateAlternateFile)
+    (okChainAsync((newPath: string) => FilePane.open(viewColumn, newPath)))
+    (errorThen(logError))
+    .value
 };
 
 const logError = (error: AlternateFileNotFoundError | string): string => {
