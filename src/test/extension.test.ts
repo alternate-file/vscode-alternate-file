@@ -50,10 +50,10 @@ describe("Extension Tests", () => {
     testCases.map(({ description, implementation, spec }) => {
       describe(`given tests ${description}`, () => {
         it("finds a test", () =>
-          openAndCheck("alternate.alternateFile", 1, implementation, spec));
+          openAndCheck("alternateFile.alternateFile", 1, implementation, spec));
 
         it("finds an implementation", () =>
-          openAndCheck("alternate.alternateFile", 1, spec, implementation));
+          openAndCheck("alternateFile.alternateFile", 1, spec, implementation));
       });
     });
   });
@@ -63,7 +63,7 @@ describe("Extension Tests", () => {
       describe(`given tests ${description}`, () => {
         it("finds a test", () =>
           openAndCheck(
-            "alternate.alternateFileInSplit",
+            "alternateFile.alternateFileInSplit",
             2,
             implementation,
             spec
@@ -71,7 +71,7 @@ describe("Extension Tests", () => {
 
         it("finds an implementation", () =>
           openAndCheck(
-            "alternate.alternateFileInSplit",
+            "alternateFile.alternateFileInSplit",
             2,
             spec,
             implementation
@@ -83,7 +83,7 @@ describe("Extension Tests", () => {
   describe("given an untested file", () => {
     it("doesn't switch to alternate", () =>
       openAndCheck(
-        "alternate.alternateFileInSplit",
+        "alternateFile.alternateFileInSplit",
         1,
         untestedFile,
         untestedFile
@@ -91,7 +91,7 @@ describe("Extension Tests", () => {
 
     it("doesn't switch to alternate or change panes", () =>
       openAndCheck(
-        "alternate.alternateFileInSplit",
+        "alternateFile.alternateFileInSplit",
         1,
         untestedFile,
         untestedFile
@@ -104,7 +104,7 @@ describe("Extension Tests", () => {
       });
       it("creates a new alternate file", () =>
         openAndCheck(
-          "alternate.createAlternateFile",
+          "alternateFile.createAlternateFile",
           1,
           untestedFile,
           untestedFileSpec
@@ -112,7 +112,7 @@ describe("Extension Tests", () => {
 
       it("creates a new alternate file in a new split", () =>
         openAndCheck(
-          "alternate.createAlternateFileInSplit",
+          "alternateFile.createAlternateFileInSplit",
           2,
           untestedFile,
           untestedFileSpec
@@ -155,7 +155,7 @@ describe("Extension Tests", () => {
 
         await FilePane.open(0, startingPath);
 
-        await vscode.commands.executeCommand("alternate.initProjections");
+        await vscode.commands.executeCommand("alternateFile.initProjections");
         const editor = FilePane.getActiveEditor();
 
         if (!editor) throw "no active editor";

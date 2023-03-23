@@ -1,18 +1,17 @@
 {
-  "name": "vscode-alternate-file",
-  "displayName": "Alternate File",
+  "name": "vscode-alternate-alternate-file",
+  "displayName": "Alternate Alternate File",
   "description": "Switch to and create spec files for any framework",
-  "version": "0.3.1",
-  "publisher": "will-wow",
-  "author": "Will Ockelmann-Wagner",
+  "version": "0.3.2",
+  "publisher": "testdouble",
+  "author": "Justin Searls <searls@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/alternate-file/vscode-alternate-file.git"
+    "url": "https://github.com/testdouble/vscode-alternate-alternate-file.git"
   },
   "license": "MIT",
   "engines": {
-    "vscode": ">=1.23.0",
-    "node": ">=8.11.3"
+    "vscode": "^1.75.0"
   },
   "keywords": [
     "vscode",
@@ -20,77 +19,61 @@
     "spec",
     "test",
     "projectile",
-    "projections"
+    "projections",
+    "projectionist"
   ],
   "categories": [
     "Other"
-  ],
-  "badges": [
-    {
-      "url": "https://img.shields.io/azure-devops/build/AlternateFile/17c9d9be-71eb-46c2-8af1-e017d13fb009/1/master.svg",
-      "href": "https://dev.azure.com/AlternateFile/VsCodeAlternateFile/_build/latest?definitionId=1&branchName=master",
-      "description": "Build Status"
-    },
-    {
-      "url": "https://img.shields.io/david/alternate-file/vscode-alternate-file.svg",
-      "href": "https://david-dm.org/alternate-file/vscode-alternate-file",
-      "description": "Dependencies"
-    }
   ],
   "icon": "assets/icon.png",
   "galleryBanner": {
     "color": "#172F54",
     "theme": "dark"
   },
-  "activationEvents": [
-    "onCommand:alternate.initProjections",
-    "onCommand:alternate.alternateFile",
-    "onCommand:alternate.alternateFileInSplit",
-    "onCommand:alternate.createAlternateFile",
-    "onCommand:alternate.createAlternateFileInSplit"
-  ],
   "main": "./out/extension",
   "contributes": {
     "commands": [
       {
-        "command": "alternate.initProjections",
+        "command": "alternateFile.initProjections",
         "title": "Initialize Projections File"
       },
       {
-        "command": "alternate.alternateFile",
+        "command": "alternateFile.alternateFile",
         "title": "Alternate File"
       },
       {
-        "command": "alternate.alternateFileInSplit",
+        "command": "alternateFile.alternateFileInSplit",
         "title": "Alternate File in Split"
       },
       {
-        "command": "alternate.createAlternateFile",
+        "command": "alternateFile.createAlternateFile",
         "title": "Create Alternate File"
       },
       {
-        "command": "alternate.createAlternateFileInSplit",
+        "command": "alternateFile.createAlternateFileInSplit",
         "title": "Create Alternate File in Split"
       }
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "yarn run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "postinstall": "vscode-install",
-    "preversion": "npm run lint",
-    "test": "npm run compile && CODE_TESTS_WORKSPACE=./test-project CODE_DISABLE_EXTENSIONS=true node ./node_modules/vscode/bin/test",
-    "lint": "npm run lint-tslint && npm run lint-prettier",
+    "preversion": "yarn run lint",
+    "test": "yarn run compile && CODE_TESTS_WORKSPACE=./test-project CODE_DISABLE_EXTENSIONS=true node ./node_modules/vscode/bin/test",
+    "lint": "yarn run lint-tslint && yarn run lint-prettier",
     "lint-tslint": "tslint -p . --config tslint.json",
     "lint-prettier": "prettier --list-different \"**/*.{ts,json,md,yml}\"",
-    "format": "npm run format-tslint && npm run format-prettier",
+    "format": "yarn run format-tslint && yarn run format-prettier",
     "format-tslint": "tslint -p . --fix --config tslint.json",
-    "format-prettier": "prettier --write \"**/*.{ts,json,md,yml}\""
+    "format-prettier": "prettier --write \"**/*.{ts,json,md,yml}\"",
+    "vsce:package": "vsce package --no-yarn --githubBranch main",
+    "vsce:publish": "vsce publish --no-yarn --githubBranch main"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.6",
     "@types/sinon": "^7.0.9",
+    "@vscode/vsce": "^2.18.0",
     "chai": "^4.2.0",
     "chai-spies": "^1.0.0",
     "prettier": "^1.16.4",

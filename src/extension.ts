@@ -9,23 +9,23 @@ export const activate = async (
 ): Promise<void> => {
   commands = [
     vscode.commands.registerCommand(
-      "alternate.initProjections",
+      "alternateFile.initProjections",
       initializeProjectionsHere
     ),
     vscode.commands.registerCommand(
-      "alternate.alternateFile",
+      "alternateFile.alternateFile",
       FindAlternate.openFile({ split: false })
     ),
     vscode.commands.registerCommand(
-      "alternate.alternateFileInSplit",
+      "alternateFile.alternateFileInSplit",
       FindAlternate.openFile({ split: true })
     ),
     vscode.commands.registerCommand(
-      "alternate.createAlternateFile",
+      "alternateFile.createAlternateFile",
       FindAlternate.createFile({ split: false })
     ),
     vscode.commands.registerCommand(
-      "alternate.createAlternateFileInSplit",
+      "alternateFile.createAlternateFileInSplit",
       FindAlternate.createFile({ split: true })
     )
   ];

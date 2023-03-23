@@ -1,8 +1,6 @@
-# vscode-alternate-file
+# vscode-alternate-alternate-file
 
-[![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/will-wow.vscode-alternate-file.svg)](https://marketplace.visualstudio.com/items?itemName=will-wow.vscode-alternate-file)
-[![Build Status](https://img.shields.io/azure-devops/build/AlternateFile/17c9d9be-71eb-46c2-8af1-e017d13fb009/1/master.svg)](https://dev.azure.com/AlternateFile/VsCodeAlternateFile/_build/latest?definitionId=1&branchName=master)
-[![David Dependency Status](https://img.shields.io/david/alternate-file/vscode-alternate-file.svg)](https://david-dm.org/alternate-file/vscode-alternate-file)
+**This is a fork of the unmaintained [vscode-alternate-file](https://github.com/alternate-file/vscode-alternate-file) which stopped working when their [vscode dependency fell too far out of date](https://github.com/alternate-file/vscode-alternate-file/pull/27)**
 
 In Vim, you can often go to the "alternate file" for the active buffer - usually the spec file for an implementation, or vice versa - by pressing `:A`. This extension adds that functionality to VS Code.
 
@@ -74,7 +72,7 @@ There aren't any shortcuts set up by default. If you'd like to add some shortcut
 ```json
 {
   "key": "ctrl+alt+a",
-  "command": "alternate.alternateFile",
+  "command": "alternateFile.alternateFile",
   "when": "editorTextFocus"
 }
 ```
@@ -82,10 +80,10 @@ There aren't any shortcuts set up by default. If you'd like to add some shortcut
 The commands are:
 
 ```text
-alternate.alternateFile
-alternate.alternateFileInSplit
-alternate.createAlternateFile
-alternate.createAlternateFileInSplit
+alternateFile.alternateFile
+alternateFile.alternateFileInSplit
+alternateFile.createAlternateFile
+alternateFile.createAlternateFileInSplit
 ```
 
 ### VSCode-Vim support
@@ -97,11 +95,11 @@ If you use [vscode-vim](https://github.com/VSCodeVim/Vim), it might be easier to
   "vim.normalModeKeyBindingsNonRecursive": [
     {
       "before": ["<leader>", "p", "a"],
-      "commands": [{ "command": "alternate.alternateFile" }]
+      "commands": [{ "command": "alternateFile.alternateFile" }]
     },
     {
       "before": ["<leader>", "p", "s"],
-      "commands": [{ "command": "alternate.alternateFileInSplit" }]
+      "commands": [{ "command": "alternateFile.alternateFileInSplit" }]
     }
   ]
 }
